@@ -2,21 +2,21 @@
 require_once ('database.php');
 class Album
 {
-    // Récupère le nom de tous les albums
-    public static function nom() {
+    // Récupère les infos de tous les albums
+    public static function info_alb() {
         try {
             $conn = dbConnect();
             if($conn){
-                $sql = 'SELECT nom_album FROM album';
+                $sql = 'SELECT * FROM album';
                 $stmt = $conn->prepare($sql);
                 $stmt->execute();
-                $result = $stmt->fetch(PDO::FETCH_ASSOC);
+                $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
             }
         } catch (PDOException $exception) {
             error_log('Connection error: ' . $exception->getMessage());
             return false;
         }
-        return $result['nom_album'];
+        return $result;
     }
 
     // Récupère l'id de l'album à partir de son nom
