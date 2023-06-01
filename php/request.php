@@ -14,6 +14,9 @@ $db = dbConnect();
 #var_dump($db);
 
 $info_al = Album::info_alb();
-$id_al = Album::id_alb("Walkerverse Pt. II");
 print_array($info_al);
+
+$id_al = Album::id_alb("Walkerverse Pt. II");
+$al = Album::type_alb($id_al);
+print_array($al);
 ?>
