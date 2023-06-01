@@ -71,8 +71,7 @@ class Album
     public static function type_alb($id_album) {
         try {
             $conn = dbConnect();
-            $sql = 'SELECT type_album_val FROM album_appartient_type 
-                WHERE id_album = :id_album';
+            $sql = 'SELECT type_album_val FROM album_appartient_type WHERE id_album = :id_album';
             $stmt = $conn->prepare($sql);
             $stmt->bindParam(':id_album', $id_album);
             $stmt->execute();
