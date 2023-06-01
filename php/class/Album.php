@@ -2,6 +2,21 @@
 
 class Album
 {
+    // Récupère le nom de tous les albums
+    public static function nom() {
+        try {
+            $conn = spotvi::connexionBD();
+            $sql = 'SELECT nom_album FROM album ';
+            $stmt = $conn->prepare($sql);
+            $stmt->execute();
+            $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        } catch (PDOException $exception) {
+            error_log('Connection error: ' . $exception->getMessage());
+            return false;
+        }
+        return $result['nom_album'];
+    }
+
     // Récupère l'id de l'album à partir de son nom
     public static function id_alb($nom_album) {
         try {
