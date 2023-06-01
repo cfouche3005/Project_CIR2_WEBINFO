@@ -66,4 +66,17 @@ class Playlist
         }
         return $result['date_creation'];
     }
+    public static function creer_playlist($nom_playlist) {
+        try {
+            $conn = dbConnect();
+            $sql = 'INSERT INTO playlist (nom_playlist) VALUES (:nom_playlist)';
+            $stmt = $conn->prepare($sql);
+            $stmt->bindParam(':nom_playlist', $nom_playlist);
+            $stmt->execute();
+            $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (PDOException $exception) {
+            error_log('Connection error: ' . $exception->getMessage());
+            return false;
+        }
+    }
 }

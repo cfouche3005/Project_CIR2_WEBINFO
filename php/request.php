@@ -27,4 +27,9 @@ $info_us = User::info_usr();
 /*$id = Artist::id_art("Alan Walker");
 $test = Artist::photo_art($id);
 print_r(json_encode($info_ar));*/
+
+Playlist::creer_playlist("Playlist de test");
+$test = Playlist::info_pla();
+print_r(json_encode($test));
+
 ?>
