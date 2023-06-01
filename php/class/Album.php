@@ -2,12 +2,12 @@
 require_once ('database.php');
 class Album
 {
-    // Récupère le nom de tous les albums
-    public static function nom() {
+    // Récupère les infos de tous les albums
+    public static function info_alb() {
         try {
             $conn = dbConnect();
             if($conn){
-                $sql = 'SELECT nom_album FROM album';
+                $sql = 'SELECT * FROM album';
                 $stmt = $conn->prepare($sql);
                 $stmt->execute();
                 $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
