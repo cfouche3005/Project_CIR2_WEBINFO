@@ -2,10 +2,27 @@
 
 class User
 {
+    // Récupère les infos de tous les utilisateurs
+    public static function info_usr() {
+        try {
+            $conn = dbConnect();
+            if($conn){
+                $sql = 'SELECT * FROM user';
+                $stmt = $conn->prepare($sql);
+                $stmt->execute();
+                $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            }
+        } catch (PDOException $exception) {
+            error_log('Connection error: ' . $exception->getMessage());
+            return false;
+        }
+        return $result;
+    }
+
     // Récupère l'id de l'utilisateur à partir de son mail
     public static function id_usr($mail_user) {
         try {
-            $conn = spotvi::connexionBD();
+            $conn = dbConnect();
             $sql = 'SELECT id_user FROM user WHERE mail_user = :mail_user';
             $stmt = $conn->prepare($sql);
             $stmt->bindParam(':id_user', $mail_user);
@@ -21,7 +38,7 @@ class User
     // Récupère le nom de l'utilisateur à partir de son identifiant
     public static function nom_usr($id_user) {
         try {
-            $conn = spotvi::connexionBD();
+            $conn = dbConnect();
             $sql = 'SELECT nom_user FROM user WHERE id_user = :id_user';
             $stmt = $conn->prepare($sql);
             $stmt->bindParam(':id_user', $id_user);
@@ -37,7 +54,7 @@ class User
     // Récupère le prénom de l'utilisateur à partir de son identifiant
     public static function prenom_usr($id_user) {
         try {
-            $conn = spotvi::connexionBD();
+            $conn = dbConnect();
             $sql = 'SELECT prenom_user FROM user WHERE id_user = :id_user';
             $stmt = $conn->prepare($sql);
             $stmt->bindParam(':id_user', $id_user);
@@ -53,7 +70,7 @@ class User
     // Récupère l'âge' de l'utilisateur à partir de son identifiant
     public static function age_usr($id_user) {
         try {
-            $conn = spotvi::connexionBD();
+            $conn = dbConnect();
             $sql = 'SELECT age_user FROM user WHERE id_user = :id_user';
             $stmt = $conn->prepare($sql);
             $stmt->bindParam(':id_user', $id_user);
@@ -69,7 +86,7 @@ class User
     // Récupère le mdp de l'utilisateur à partir de son identifiant
     public static function mdp_usr($id_user) {
         try {
-            $conn = spotvi::connexionBD();
+            $conn = dbConnect();
             $sql = 'SELECT mdp_user FROM user WHERE id_user = :id_user';
             $stmt = $conn->prepare($sql);
             $stmt->bindParam(':id_user', $id_user);
@@ -85,7 +102,7 @@ class User
     // Récupère le pseudo de l'utilisateur à partir de son identifiant
     public static function pseudo_usr($id_user) {
         try {
-            $conn = spotvi::connexionBD();
+            $conn = dbConnect();
             $sql = 'SELECT pseudo_user FROM user WHERE id_user = :id_user';
             $stmt = $conn->prepare($sql);
             $stmt->bindParam(':id_user', $id_user);
@@ -101,7 +118,7 @@ class User
     // Récupère le photo de l'utilisateur à partir de son identifiant
     public static function photo_usr($id_user) {
         try {
-            $conn = spotvi::connexionBD();
+            $conn = dbConnect();
             $sql = 'SELECT photo_user FROM user WHERE id_user = :id_user';
             $stmt = $conn->prepare($sql);
             $stmt->bindParam(':id_user', $id_user);

@@ -2,10 +2,43 @@
 
 class Music
 {
+    // Récupère les infos de toutes les musiques
+    public static function info_mus() {
+        try {
+            $conn = dbConnect();
+            if($conn){
+                $sql = 'SELECT * FROM music';
+                $stmt = $conn->prepare($sql);
+                $stmt->execute();
+                $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            }
+        } catch (PDOException $exception) {
+            error_log('Connection error: ' . $exception->getMessage());
+            return false;
+        }
+        return $result;
+    }
+
+    // Récupère l'id d'une musique à partir de son titre
+    public static function id_mus($title_music) {
+        try {
+            $conn = dbConnect();
+            $sql = 'SELECT id_music FROM music WHERE title_music = :title_music';
+            $stmt = $conn->prepare($sql);
+            $stmt->bindParam(':title_music', $title_music);
+            $stmt->execute();
+            $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        } catch (PDOException $exception) {
+            error_log('Connection error: ' . $exception->getMessage());
+            return false;
+        }
+        return $result['id_music'];
+    }
+
     // Récupère le titre de la musique à partir de son id
     public static function title_mus($id_music) {
         try {
-            $conn = spotvi::connexionBD();
+            $conn = dbConnect();
             $sql = 'SELECT title_music FROM music WHERE id_music = :id_music';
             $stmt = $conn->prepare($sql);
             $stmt->bindParam(':id_music', $id_music);
@@ -21,8 +54,8 @@ class Music
     // Récupère le lien de la musique à partir de son id
     public static function link_mus($id_music) {
         try {
-            $conn = spotvi::connexionBD();
-            $sql = 'SELECT link_music FROM music WHERE id_music = :id_music';
+            $conn = dbConnect();
+            $sql = 'SELECT lien_music FROM music WHERE id_music = :id_music';
             $stmt = $conn->prepare($sql);
             $stmt->bindParam(':id_music', $id_music);
             $stmt->execute();
@@ -31,13 +64,13 @@ class Music
             error_log('Connection error: ' . $exception->getMessage());
             return false;
         }
-        return $result['link_music'];
+        return $result['lien_music'];
     }
 
     // Récupère le temps de la musique à partir de son id
     public static function time_mus($id_music) {
         try {
-            $conn = spotvi::connexionBD();
+            $conn = dbConnect();
             $sql = 'SELECT time_music FROM music WHERE id_music = :id_music';
             $stmt = $conn->prepare($sql);
             $stmt->bindParam(':id_music', $id_music);
@@ -53,7 +86,7 @@ class Music
     // Récupère la place de la musique dans l'album à partir de son id
     public static function place_album_mus($id_music) {
         try {
-            $conn = spotvi::connexionBD();
+            $conn = dbConnect();
             $sql = 'SELECT place_album FROM music WHERE id_music = :id_music';
             $stmt = $conn->prepare($sql);
             $stmt->bindParam(':id_music', $id_music);
@@ -69,8 +102,8 @@ class Music
     // Récupère le genre de la musique à partir de son id
     public static function genre_mus($id_music) {
         try {
-            $conn = spotvi::connexionBD();
-            $sql = 'SELECT genre_music FROM music WHERE id_music = :id_music';
+            $conn = dbConnect();
+            $sql = 'SELECT genre_music_val FROM music_appartient_genre WHERE id_music = :id_music';
             $stmt = $conn->prepare($sql);
             $stmt->bindParam(':id_music', $id_music);
             $stmt->execute();
@@ -79,6 +112,6 @@ class Music
             error_log('Connection error: ' . $exception->getMessage());
             return false;
         }
-        return $result['genre_music'];
+        return $result['genre_music_val'];
     }
 }
