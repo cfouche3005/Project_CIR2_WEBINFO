@@ -66,11 +66,11 @@ class Music
         return $result['place_album'];
     }
 
-    // Récupère le type de la musique à partir de son id
-    public static function type_mus($id_music) {
+    // Récupère le genre de la musique à partir de son id
+    public static function genre_mus($id_music) {
         try {
             $conn = spotvi::connexionBD();
-            $sql = 'SELECT type_music FROM music WHERE id_music = :id_music';
+            $sql = 'SELECT genre_music FROM music WHERE id_music = :id_music';
             $stmt = $conn->prepare($sql);
             $stmt->bindParam(':id_music', $id_music);
             $stmt->execute();
@@ -79,6 +79,6 @@ class Music
             error_log('Connection error: ' . $exception->getMessage());
             return false;
         }
-        return $result['type_music'];
+        return $result['genre_music'];
     }
 }
