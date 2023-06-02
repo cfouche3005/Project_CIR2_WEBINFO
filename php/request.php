@@ -17,19 +17,19 @@ error_reporting(E_ALL);
 $db = dbConnect();
 #var_dump($db);
 
-$info_al = Album::info_alb();
-$info_mu = Music::info_mus();
-$info_ar = Artist::info_art();
-$info_pl = Playlist::info_pla();
-$info_us = User::info_usr();
+$info_al = Album::info_alb($db);
+$info_mu = Music::info_mus($db);
+$info_ar = Artist::info_art($db);
+$info_pl = Playlist::info_pla($db);
+$info_us = User::info_usr($db);
 #print_array($info_al);
 
-/*$id = Artist::id_art("Alan Walker");
-$test = Artist::photo_art($id);
+/*$id = Artist::id_art("Alan Walker", $db);
+$test = Artist::photo_art($id, $db);
 print_r(json_encode($info_ar));*/
 
-Playlist::creer_playlist("Playlist de test");
-$test = Playlist::info_pla();
+Playlist::creer_playlist("electro", $db);
+$test = Playlist::info_pla($db);
 print_r(json_encode($test));
 
 ?>

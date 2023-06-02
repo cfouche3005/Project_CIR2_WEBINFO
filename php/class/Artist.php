@@ -3,9 +3,9 @@
 class Artist
 {
     // Récupère les infos de tous les artistes
-    public static function info_art() {
+    public static function info_art($conn) {
         try {
-            $conn = dbConnect();
+            
             if($conn){
                 $sql = 'SELECT * FROM artist';
                 $stmt = $conn->prepare($sql);
@@ -20,9 +20,9 @@ class Artist
     }
 
     // Récupère l'id d'un artiste' à partir de son pseudo
-    public static function id_art($pseudo_artist) {
+    public static function id_art($pseudo_artist, $conn) {
         try {
-            $conn = dbConnect();
+            
             $sql = 'SELECT id_artist FROM artist WHERE pseudo_artist = :pseudo_artist';
             $stmt = $conn->prepare($sql);
             $stmt->bindParam(':pseudo_artist', $pseudo_artist);
@@ -36,9 +36,9 @@ class Artist
     }
 
     // Récupère le nom et info de l'artiste à partir de son id
-    public static function name_info_art($id_artist) {
+    public static function name_info_art($id_artist, $conn) {
         try {
-            $conn = dbConnect();
+            
             $sql = 'SELECT name_info FROM artist WHERE id_artist = :id_artist';
             $stmt = $conn->prepare($sql);
             $stmt->bindParam(':id_artist', $id_artist);
@@ -52,9 +52,9 @@ class Artist
     }
 
     // Récupère le lien de la bio de l'artiste à partir de son id
-    public static function biographie_lien_art($id_artist) {
+    public static function biographie_lien_art($id_artist, $conn) {
         try {
-            $conn = dbConnect();
+            
             $sql = 'SELECT biographie_lien FROM artist WHERE id_artist = :id_artist';
             $stmt = $conn->prepare($sql);
             $stmt->bindParam(':id_artist', $id_artist);
@@ -68,9 +68,9 @@ class Artist
     }
 
     // Récupère le type de l'artiste à partir de son id
-    public static function type_art($id_artist) {
+    public static function type_art($id_artist, $conn) {
         try {
-            $conn = dbConnect();
+            
             $sql = 'SELECT type_artist_val FROM artist_appartient_type WHERE id_artist = :id_artist';
             $stmt = $conn->prepare($sql);
             $stmt->bindParam(':id_artist', $id_artist);
@@ -84,9 +84,9 @@ class Artist
     }
 
     // Récupère la photo de l'artiste à partir de son id
-    public static function photo_art($id_artist) {
+    public static function photo_art($id_artist, $conn) {
         try {
-            $conn = dbConnect();
+            
             $sql = 'SELECT photo_artist FROM artist WHERE id_artist = :id_artist';
             $stmt = $conn->prepare($sql);
             $stmt->bindParam(':id_artist', $id_artist);

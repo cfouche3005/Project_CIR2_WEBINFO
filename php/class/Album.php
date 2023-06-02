@@ -3,9 +3,9 @@ require_once ('database.php');
 class Album
 {
     // Récupère les infos de tous les albums
-    public static function info_alb() {
+    public static function info_alb($conn) {
         try {
-            $conn = dbConnect();
+            
             if($conn){
                 $sql = 'SELECT * FROM album';
                 $stmt = $conn->prepare($sql);
@@ -20,9 +20,9 @@ class Album
     }
 
     // Récupère l'id de l'album à partir de son nom
-    public static function id_alb($nom_album) {
+    public static function id_alb($nom_album, $conn) {
         try {
-            $conn = dbConnect();
+            
             $sql = 'SELECT id_album FROM album WHERE nom_album = :nom_album';
             $stmt = $conn->prepare($sql);
             $stmt->bindParam(':nom_album', $nom_album);
@@ -36,9 +36,9 @@ class Album
     }
 
     // Récupère la date de l'album à partir de son id
-    public static function date_alb($id_album) {
+    public static function date_alb($id_album, $conn) {
         try {
-            $conn = dbConnect();
+            
             $sql = 'SELECT date_album FROM album WHERE id_album = :id_album';
             $stmt = $conn->prepare($sql);
             $stmt->bindParam(':id_album', $id_album);
@@ -52,9 +52,9 @@ class Album
     }
 
     // Récupère l'image de l'album à partir de son id
-    public static function image_alb($id_album) {
+    public static function image_alb($id_album, $conn) {
         try {
-            $conn = dbConnect();
+            
             $sql = 'SELECT image_album FROM album WHERE id_album = :id_album';
             $stmt = $conn->prepare($sql);
             $stmt->bindParam(':id_album', $id_album);
@@ -68,9 +68,9 @@ class Album
     }
 
     // Récupère le type de l'album à partir de son id
-    public static function type_alb($id_album) {
+    public static function type_alb($id_album, $conn) {
         try {
-            $conn = dbConnect();
+            
             $sql = 'SELECT type_album_val FROM album_appartient_type WHERE id_album = :id_album';
             $stmt = $conn->prepare($sql);
             $stmt->bindParam(':id_album', $id_album);
