@@ -66,12 +66,14 @@ class Playlist
         }
         return $result['date_creation'];
     }
-    public static function creer_playlist($nom_playlist) {
+
+    public static function creer_playlist($nom_playlist, $id_user) {
         try {
             $conn = dbConnect();
-            $sql = 'INSERT INTO playlist (nom_playlist) VALUES (:nom_playlist)';
+            $sql = 'INSERT INTO playlist (nom_playlist, date_creation, id_user) VALUES (:nom_playlist, NOW(), :id_user)';
             $stmt = $conn->prepare($sql);
             $stmt->bindParam(':nom_playlist', $nom_playlist);
+            $stmt->bindParam(':id_user', $id_user);
             $stmt->execute();
             $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
         } catch (PDOException $exception) {

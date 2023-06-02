@@ -28,8 +28,7 @@ $info_us = User::info_usr();
 $test = Artist::photo_art($id);
 print_r(json_encode($info_ar));*/
 
-Playlist::creer_playlist("Playlist de test");
+Playlist::creer_playlist("Playlist de test", 1);
 $test = Playlist::info_pla();
 print_r(json_encode($test));
-
 ?>
