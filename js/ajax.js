@@ -52,7 +52,6 @@ function httpErrors(errorCode)
   }
 }
 
-
 // ajaxRequest('GET', 'https://projet-webinfo.cfouche-serv.fr/music/alan_walker/alan_walker_-_different_world/1_-_alan_walker_-_intro.opus', (response) => {
 //   console.log(response);
 // });
