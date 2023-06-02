@@ -1,0 +1,36 @@
+.back-bar {
+    background-color: #303030;
+}
+
+.back-mid {
+    background-color: #242424;
+}
+
+.padding-main {
+    padding-top: 56px!important;
+    padding-bottom: 56px!important;
+}
+
+.nav-link {
+    color: #ffffff!important;
+}
+
+
+.research-button {
+    background-color: #454545!important;
+    border: none!important;
+    color: #858585!important;
+}
+
+
+.research-input {
+    background-color: #454545!important;
+    border: none!important;
+    color: #858585!important;
+}
+
+.form-control.research-input{
+    background-color: #454545!important;
+    border: none!important;
+    color: #858585!important;
+}
