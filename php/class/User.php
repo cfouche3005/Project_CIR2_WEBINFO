@@ -7,7 +7,7 @@ class User
         try {
             
             if($conn){
-                $sql = 'SELECT * FROM user';
+                $sql = 'SELECT * FROM users';
                 $stmt = $conn->prepare($sql);
                 $stmt->execute();
                 $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -23,7 +23,7 @@ class User
     public static function id_usr($mail_user, $conn) {
         try {
             
-            $sql = 'SELECT id_user FROM user WHERE mail_user = :mail_user';
+            $sql = 'SELECT id_user FROM users WHERE mail_user = :mail_user';
             $stmt = $conn->prepare($sql);
             $stmt->bindParam(':id_user', $mail_user);
             $stmt->execute();
@@ -34,12 +34,27 @@ class User
         }
         return $result['id_user'];
     }
+    // Récupère le mail de l'utilisateur à partir de son identifiant
+    public static function mail_usr($id_user, $conn) {
+        try {
+            
+            $sql = 'SELECT mail_user FROM users WHERE id_user = :id_user';
+            $stmt = $conn->prepare($sql);
+            $stmt->bindParam(':id_user', $id_user);
+            $stmt->execute();
+            $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        } catch (PDOException $exception) {
+            error_log('Connection error: ' . $exception->getMessage());
+            return false;
+        }
+        return $result['mail_user'];
+    }
 
     // Récupère le nom de l'utilisateur à partir de son identifiant
     public static function nom_usr($id_user, $conn) {
         try {
             
-            $sql = 'SELECT nom_user FROM user WHERE id_user = :id_user';
+            $sql = 'SELECT nom_user FROM users WHERE id_user = :id_user';
             $stmt = $conn->prepare($sql);
             $stmt->bindParam(':id_user', $id_user);
             $stmt->execute();
@@ -55,7 +70,7 @@ class User
     public static function prenom_usr($id_user, $conn) {
         try {
             
-            $sql = 'SELECT prenom_user FROM user WHERE id_user = :id_user';
+            $sql = 'SELECT prenom_user FROM users WHERE id_user = :id_user';
             $stmt = $conn->prepare($sql);
             $stmt->bindParam(':id_user', $id_user);
             $stmt->execute();
@@ -71,7 +86,7 @@ class User
     public static function age_usr($id_user, $conn) {
         try {
             
-            $sql = 'SELECT age_user FROM user WHERE id_user = :id_user';
+            $sql = 'SELECT age_user FROM users WHERE id_user = :id_user';
             $stmt = $conn->prepare($sql);
             $stmt->bindParam(':id_user', $id_user);
             $stmt->execute();
@@ -87,7 +102,7 @@ class User
     public static function mdp_usr($id_user, $conn) {
         try {
             
-            $sql = 'SELECT mdp_user FROM user WHERE id_user = :id_user';
+            $sql = 'SELECT mdp_user FROM users WHERE id_user = :id_user';
             $stmt = $conn->prepare($sql);
             $stmt->bindParam(':id_user', $id_user);
             $stmt->execute();
@@ -103,7 +118,7 @@ class User
     public static function pseudo_usr($id_user, $conn) {
         try {
             
-            $sql = 'SELECT pseudo_user FROM user WHERE id_user = :id_user';
+            $sql = 'SELECT pseudo_user FROM users WHERE id_user = :id_user';
             $stmt = $conn->prepare($sql);
             $stmt->bindParam(':id_user', $id_user);
             $stmt->execute();
@@ -119,7 +134,7 @@ class User
     public static function photo_usr($id_user, $conn) {
         try {
             
-            $sql = 'SELECT photo_user FROM user WHERE id_user = :id_user';
+            $sql = 'SELECT photo_user FROM users WHERE id_user = :id_user';
             $stmt = $conn->prepare($sql);
             $stmt->bindParam(':id_user', $id_user);
             $stmt->execute();
@@ -130,4 +145,83 @@ class User
         }
         return $result['photo_user'];
     }
+
+    public static function ajout_usr($mail_user, $nom_user, $prenom_user, $date_naissance, $mdp_user, $pseudo_user, $photo_user, $conn) {
+        try {
+            
+            $sql = 'INSERT INTO users (mail_user, nom_user, prenom_user, date_naissance, mdp_user, pseudo_user, photo_user, id_user) VALUES (:mail_user, :nom_user, :prenom_user, :date_naissance, :mdp_user, :pseudo_user, :photo_user, DEFAULT)';
+            $stmt = $conn->prepare($sql);
+            $stmt->bindParam(':mail_user', $mail_user);
+            $stmt->bindParam(':nom_user', $nom_user);
+            $stmt->bindParam(':prenom_user', $prenom_user);
+            $stmt->bindParam(':date_naissance', $date_naissance);
+            $stmt->bindParam(':mdp_user', $mdp_user);
+            $stmt->bindParam(':pseudo_user', $pseudo_user);
+            $stmt->bindParam(':photo_user', $photo_user);
+            $stmt->execute();
+            $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (PDOException $exception) {
+            error_log('Connection error: ' . $exception->getMessage());
+            return false;
+        }
+    }
+    public static function modifier_usr($id_user, $mail_user, $nom_user, $prenom_user, $date_naissance, $mdp_user, $pseudo_user, $conn) {
+        try {
+            
+            $sql = 'UPDATE users SET mail_user = :mail_user, nom_user = :nom_user, prenom_user = :prenom_user, date_naissance = :date_naissance, mdp_user = :mdp_user, pseudo_user = :pseudo_user WHERE id_user = :id_user';
+            
+            //$sql = 'UPDATE playlist SET nom_playlist = :nom_playlist, date_modif = NOW() WHERE id_playlist = :id_playlist';
+            //$sql = 'UPDATE playlist SET nom_playlist, date_modif WHERE id_playlist = :id_playlist AND nom_playlist = :nom_playlist AND date_modif = NOW()';
+            $stmt = $conn->prepare($sql);
+            $stmt->bindParam(':mail_user', $mail_user);
+            $stmt->bindParam(':nom_user', $nom_user);
+            $stmt->bindParam(':prenom_user', $prenom_user);
+            $stmt->bindParam(':date_naissance', $date_naissance);
+            $stmt->bindParam(':mdp_user', $mdp_user);
+            $stmt->bindParam(':pseudo_user', $pseudo_user);
+            $stmt->bindParam(':id_user', $id_user);
+            $stmt->execute();
+            $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (PDOException $exception) {
+            error_log('Connection error: ' . $exception->getMessage());
+            return false;
+        }
+    }
+    public static function modifier_usr_sans_mdp($id_user, $mail_user, $nom_user, $prenom_user, $date_naissance, $pseudo_user, $conn) {
+        try {
+            
+            $sql = 'UPDATE users SET mail_user = :mail_user, nom_user = :nom_user, prenom_user = :prenom_user, date_naissance = :date_naissance, pseudo_user = :pseudo_user WHERE id_user = :id_user';
+            
+            //$sql = 'UPDATE playlist SET nom_playlist = :nom_playlist, date_modif = NOW() WHERE id_playlist = :id_playlist';
+            //$sql = 'UPDATE playlist SET nom_playlist, date_modif WHERE id_playlist = :id_playlist AND nom_playlist = :nom_playlist AND date_modif = NOW()';
+            $stmt = $conn->prepare($sql);
+            $stmt->bindParam(':mail_user', $mail_user);
+            $stmt->bindParam(':nom_user', $nom_user);
+            $stmt->bindParam(':prenom_user', $prenom_user);
+            $stmt->bindParam(':date_naissance', $date_naissance);
+            $stmt->bindParam(':pseudo_user', $pseudo_user);
+            $stmt->bindParam(':id_user', $id_user);
+            $stmt->execute();
+            $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (PDOException $exception) {
+            error_log('Connection error: ' . $exception->getMessage());
+            return false;
+        }
+    }
+    public static function delete_usr($id_user, $conn)
+    {
+        try
+        {
+          $request = 'DELETE FROM users WHERE id_user=:id_user';
+          $statement = $conn->prepare($request);
+          $statement->bindParam(':id_user', $id_user);
+          $statement->execute();
+        }
+        catch (PDOException $exception)
+        {
+          error_log('Request error: '.$exception->getMessage());
+          return false;
+        }
+        return true;
+      }
 }
