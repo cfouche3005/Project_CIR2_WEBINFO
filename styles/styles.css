@@ -34,3 +34,7 @@
     border: none!important;
     color: #858585!important;
 }
+
+.active{
+    background-color: #454545!important;
+}
