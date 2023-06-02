@@ -160,6 +160,8 @@ class User
             $stmt->bindParam(':photo_user', $photo_user);
             $stmt->execute();
             $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            $id_usr = User::id_usr($mail_user, $conn);
+            Playlist::creer_playlist("Coup de coeur", $id_usr, $conn); // marche pas à régler
         } catch (PDOException $exception) {
             error_log('Connection error: ' . $exception->getMessage());
             return false;

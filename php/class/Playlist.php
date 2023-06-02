@@ -79,6 +79,7 @@ class Playlist
             error_log('Connection error: ' . $exception->getMessage());
             return false;
         }
+        return true;
     }
     public static function modifier_playlist($nom_playlist, $id_playlist, $conn) {
         try {

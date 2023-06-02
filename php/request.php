@@ -40,11 +40,11 @@ $test = Playlist::info_pla($db);
 print_r(json_encode($test));
 */
 
-/*
+
 User::ajout_usr("lemail@gmail.com", "auregs", "vfds", "2007-02-07", "jsp", "oui", "photo3",  $db);
-$test = User::info_usr($db);
+$test = Playlist::info_pla($db);
 print_r(json_encode($test));
-*/
+
 
 /*
 Playlist::modifier_playlist("Bonjour", 10, $db);
