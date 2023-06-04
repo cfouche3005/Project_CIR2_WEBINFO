@@ -1,22 +1,53 @@
 <html>
 
-<head>
+    <head>
 
-<!-- Meta tags -->    
-<meta charset=" utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <!-- Meta tags -->
+        <meta charset=" utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-<!-- Title -->
-<title>PROFILE</title>
+        <!-- Title -->
+        <title>PROFILE</title>
 
-<!-- JS Scripts -->
-<script src="../../../lib/scripts/jquery-3.7.0.min.js"></script>
-<script src="../../../lib/scripts/bootstrap.bundle.min.js"></script>
-<script src="../../../js/ajax.js" defer></script>
+        <!-- JS Scripts -->
+        <script src="../../../lib/scripts/jquery-3.7.0.min.js"></script>
+        <script src="../../../lib/scripts/bootstrap.bundle.min.js"></script>
+        <script src="../../../js/ajax.js" defer></script>
 
-<!-- CSS Styles -->
-<link rel="stylesheet" href="../../../lib/styles/bootstrap.min.css">
-<link rel="stylesheet" href="../../../styles/styles.css">
+        <!-- CSS Styles -->
+        <link rel="stylesheet" href="../../../lib/styles/bootstrap.min.css">
+        <link rel="stylesheet" href="../../../styles/styles.css">
+        <link rel="stylesheet" href="page.css">
+    </head>
 
-</head>
-PROFILE
+    <body>
+        <div class="d-flex">
+            <div class="ps-5 d-flex flex-column">
+                <div class="image-container">
+                    <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava1-bg.webp" alt="Avatar" class="image_profil"/>
+                </div>
+                <br>
+                <button type="submit" id='modif_photo'>Modifier la photo</button>
+                <button type="submit" id='info_modif'>Changer informations</button>
+                <button type="submit" id='logout' style="background-color: #C01C28!important">Déconnexion</button>
+            </div>
+            <div id="container">
+                <br>
+                <label class="label-input">
+                    <input type="text" placeholder="Nom" name="username">
+                    <input type="text" placeholder="Prénom" name="prenom">
+                </label>
+                <label class="label-input">
+                    <input type="date" placeholder="Date de naissance" name="date">
+                    <input type="email" placeholder="Mail" name="mail">
+                </label>
+                <br><br><br>
+                <label class="label-input">
+                    <button type="submit" id='modif_mdp' style="width: 40%;">Modifier le mot de passe</button>
+                    <button type="submit" id='conf_modif' style="width: 40%; background-color: #3584E4!important;">Confirmer la modification</button>
+                </label>
+            </div>
+        </div>
+
+    </body>
+</html>
