@@ -73,15 +73,16 @@ $request = explode('/', $request);
 $requestRessource = array_shift($request);
 */
 
-$method = $_SERVER['REQUEST_METHOD'];
-$path = $_SERVER['PATH_INFO'];
+//$method = $_SERVER['REQUEST_METHOD'];
+//$path = $_SERVER['PATH_INFO'];
 /*
 $test=Album::info_album('2ecdc503-8f4e-488c-aee2-d35d87916021', $db);
 echo json_encode($test);
-
+*/
 $test = Album::info_album('2ecdc503-8f4e-488c-aee2-d35d87916021', $db);
 echo json_encode($test);
-*/
+
+/*
 switch ($method){
     
     case 'GET':
@@ -159,6 +160,7 @@ switch ($method){
         break;
         
     }
+*/
     
 
 //print_r($_SERVER['PATH_INFO']);
