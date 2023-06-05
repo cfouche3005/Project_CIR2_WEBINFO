@@ -60,3 +60,7 @@ button:hover {
     color: white;
     border: 1px solid white;
 }
+
+.bg-danger{
+    background-color: #C01C28!important;
+}
