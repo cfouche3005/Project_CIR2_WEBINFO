@@ -113,6 +113,38 @@ class User
         }
         return $result['mdp_user'];
     }
+    public static function login_usr($mail_user, $mdp_user, $conn) {
+        try {
+            $mail_exist= 'SELECT COUNT(*) FROM users WHERE mail_user = :mail_user';
+            if ($mail_exist == 1) {
+
+                        //récupère le mp crypté present ds la base de donnée selon l'email 
+                    $request = 'SELECT mdp_user from users where mail_user = :mail_user'; 
+                    $statement = $conn->prepare($request);
+                    $statement->bindParam(':mail_user',$mail_user);
+                    $statement->execute();
+                    $mp_crypt_bd = $statement->fetch(PDO::FETCH_ASSOC);
+            
+                    //verifie si mp entrer est mp crypt de la bd
+                    $checkMp = password_verify($mdp_user,$mp_crypt_bd['mdp_user']);   //attention verify prend que string
+                    if($checkMp){
+                        $sql = 'SELECT * FROM users WHERE mail_user = :mail_user';
+                        $stmt = $conn->prepare($sql);
+                        $stmt->bindParam(':mail_user', $mail_user);
+                        $stmt->bindParam(':mdp_user', $mdp_user);
+                        $stmt->execute();
+                        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                        return json_encode($result);
+
+                    }
+                    }
+                }
+            
+        catch (PDOException $exception) {
+            error_log('Connection error: ' . $exception->getMessage());
+            return false;
+        }
+    }
 
     // Récupère le pseudo de l'utilisateur à partir de son identifiant
     public static function pseudo_usr($id_user, $conn) {
@@ -155,6 +187,7 @@ class User
             $stmt->bindParam(':nom_user', $nom_user);
             $stmt->bindParam(':prenom_user', $prenom_user);
             $stmt->bindParam(':date_naissance', $date_naissance);
+            $mdp_user= password_hash($mdp_user, 'PASSWORD_BCRYPT');
             $stmt->bindParam(':mdp_user', $mdp_user);
             $stmt->bindParam(':pseudo_user', $pseudo_user);
             $stmt->bindParam(':photo_user', $photo_user);
@@ -166,6 +199,7 @@ class User
             error_log('Connection error: ' . $exception->getMessage());
             return false;
         }
+        return true;
     }
     public static function modifier_usr($id_user, $mail_user, $nom_user, $prenom_user, $date_naissance, $mdp_user, $pseudo_user, $conn) {
         try {
@@ -179,6 +213,7 @@ class User
             $stmt->bindParam(':nom_user', $nom_user);
             $stmt->bindParam(':prenom_user', $prenom_user);
             $stmt->bindParam(':date_naissance', $date_naissance);
+            $mdp_user=password_hash($mdp_user, 'PASSWORD_BCRYPT');
             $stmt->bindParam(':mdp_user', $mdp_user);
             $stmt->bindParam(':pseudo_user', $pseudo_user);
             $stmt->bindParam(':id_user', $id_user);

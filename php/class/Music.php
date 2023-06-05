@@ -114,4 +114,44 @@ class Music
         }
         return $result['genre_music_val'];
     }
+    public static function rechercherMusique($conn, $recherche) {
+        try {
+            $sql = 'SELECT * FROM music WHERE title_music LIKE :recherche';
+            $stmt = $conn->prepare($sql);
+            $stmt->bindParam(':recherche', $recherche);
+            $stmt->execute();
+            $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (PDOException $exception) {
+            error_log('Connection error: ' . $exception->getMessage());
+            return false;
+        }
+        return $result;
+    }
+    public static function rechercherMusiqueGenre($conn, $recherche) {
+        try {
+            $sql = 'SELECT * FROM music WHERE id_music IN (SELECT id_music FROM music_appartient_genre WHERE genre_music_val LIKE :recherche)';
+            $stmt = $conn->prepare($sql);
+            $stmt->bindParam(':recherche', $recherche);
+            $stmt->execute();
+            $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (PDOException $exception) {
+            error_log('Connection error: ' . $exception->getMessage());
+            return false;
+        }
+        return $result;
+    }
+    public static function rechercherMusiqueArtiste($conn, $recherche) {
+        try {
+            $sql = 'SELECT * FROM music WHERE id_music IN (SELECT id_music FROM music_appartient_artiste WHERE id_artiste IN (SELECT id_artiste FROM artiste WHERE nom_artiste LIKE :recherche))';
+            $stmt = $conn->prepare($sql);
+            $stmt->bindParam(':recherche', $recherche);
+            $stmt->execute();
+            $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (PDOException $exception) {
+            error_log('Connection error: ' . $exception->getMessage());
+            return false;
+        }
+        return $result;
+    }
+   
 }
