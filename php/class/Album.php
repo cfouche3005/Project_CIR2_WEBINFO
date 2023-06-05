@@ -3,7 +3,7 @@ require_once ('database.php');
 class Album
 {
     // Récupère les infos de tous les albums
-    public static function info_alb($conn) {
+    public static function list_alb($conn) {
         try {
             
             if($conn){
@@ -81,5 +81,38 @@ class Album
             return false;
         }
         return $result['type_album_val'];
+    }
+    //fonction qui a partir de l'id d'un album retourne toutes les infos et musiques de l'album
+    public static function info_album($id_album, $conn){
+        try {
+            //requete sql qui selectionne le nom de toutes les musiques d'un album ainsi que les infos de l'album
+            //$sql = 'SELECT nom_album, date_album, image_album from music m JOIN contient c ON c.id_music=m.id_music JOIN album a ON a.id_album=c.id_album JOIN type_album t ON t.type_album_val=a.type_album_val WHERE a.id_album = :id_album';
+            //$sql2= 'SELECT id_music, lien_music, title_music, time_music, place_album FROM music m JOIN contient c ON c.id_music=m.id_music JOIN album a ON a.id_album=c.id_album JOIN type_album t ON t.type_album_val=a.type_album_val WHERE a.id_album = :id_album ORDER BY place_album';
+            $sql = 'SELECT id_album, nom_album, date_album, image_album from album WHERE id_album = :id_album';
+            $sql3= 'SELECT c.id_music, lien_music, title_music, time_music, place_album FROM music m JOIN contient c on c.id_music=m.id_music JOIN album a ON a.id_album=c.id_album WHERE a.id_album = :id_album ORDER BY place_album';
+            $stmt = $conn->prepare($sql);
+            $stmt->bindParam(':id_album', $id_album);
+            $stmt->execute();
+            $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            
+            $stmt1 = $conn->prepare($sql3);
+            $stmt1->bindParam(':id_album', $id_album);
+            $stmt1->execute();
+            $result1 = $stmt1->fetchAll(PDO::FETCH_ASSOC);
+            //on assemble les deux tableaux $resultat et $resultat1
+            $fresult['album']=$result;
+            $fresult['musics']=$result1;
+            return $fresult;
+
+         
+
+            
+
+
+        } catch (PDOException $exception) {
+            error_log('Connection error: ' . $exception->getMessage());
+            return false;
+        }
+        
     }
 }

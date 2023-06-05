@@ -116,7 +116,11 @@ class User
     public static function login_usr($mail_user, $mdp_user, $conn) {
         try {
             $mail_exist= 'SELECT COUNT(*) FROM users WHERE mail_user = :mail_user';
-            if ($mail_exist == 1) {
+            $stmt = $conn->prepare($mail_exist);
+            $stmt->bindParam(':mail_user', $mail_user);
+            $stmt->execute();
+            $result = $stmt->fetch(PDO::FETCH_ASSOC);
+            if ($result['count'] == 1) {
 
                         //récupère le mp crypté present ds la base de donnée selon l'email 
                     $request = 'SELECT mdp_user from users where mail_user = :mail_user'; 
@@ -131,19 +135,25 @@ class User
                         $sql = 'SELECT * FROM users WHERE mail_user = :mail_user';
                         $stmt = $conn->prepare($sql);
                         $stmt->bindParam(':mail_user', $mail_user);
-                        $stmt->bindParam(':mdp_user', $mdp_user);
                         $stmt->execute();
                         $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
-                        return json_encode($result);
+                        return $result;
 
                     }
+                    else {
+                        return false;
                     }
-                }
+            }
+            else  {
+                return false;
+            }
+        }
             
         catch (PDOException $exception) {
             error_log('Connection error: ' . $exception->getMessage());
             return false;
         }
+        
     }
 
     // Récupère le pseudo de l'utilisateur à partir de son identifiant
@@ -183,24 +193,33 @@ class User
             
             $sql = 'INSERT INTO users (mail_user, nom_user, prenom_user, date_naissance, mdp_user, pseudo_user, photo_user, id_user) VALUES (:mail_user, :nom_user, :prenom_user, :date_naissance, :mdp_user, :pseudo_user, :photo_user, DEFAULT)';
             $stmt = $conn->prepare($sql);
-            $stmt->bindParam(':mail_user', $mail_user);
-            $stmt->bindParam(':nom_user', $nom_user);
-            $stmt->bindParam(':prenom_user', $prenom_user);
-            $stmt->bindParam(':date_naissance', $date_naissance);
-            $mdp_user= password_hash($mdp_user, 'PASSWORD_BCRYPT');
-            $stmt->bindParam(':mdp_user', $mdp_user);
-            $stmt->bindParam(':pseudo_user', $pseudo_user);
-            $stmt->bindParam(':photo_user', $photo_user);
-            $stmt->execute();
-            $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
-            $id_usr = User::id_usr($mail_user, $conn);
-            Playlist::creer_playlist("Coup de coeur", $id_usr, $conn); // marche pas à régler
-        } catch (PDOException $exception) {
+            //vérification si le mail n'existe pas déjà 
+            $mail_exist= 'SELECT COUNT(*) FROM users WHERE mail_user = :mail_user';
+            if($mail_exist>=1){
+                return "mail déjà existant";
+            }
+            else{
+                $stmt->bindParam(':mail_user', $mail_user);
+                $stmt->bindParam(':nom_user', $nom_user);
+                $stmt->bindParam(':prenom_user', $prenom_user);
+                $stmt->bindParam(':date_naissance', $date_naissance);
+                $mdp_user= password_hash($mdp_user, PASSWORD_BCRYPT);
+                $stmt->bindParam(':mdp_user', $mdp_user);
+                $stmt->bindParam(':pseudo_user', $pseudo_user);
+                $stmt->bindParam(':photo_user', $photo_user);
+                $stmt->execute();
+                $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                $id_usr = User::id_usr($mail_user, $conn);
+                Playlist::creer_playlist("Coup de coeur", $id_usr, $conn); // marche pas à régler
+            }
+        
+        }catch (PDOException $exception) {
             error_log('Connection error: ' . $exception->getMessage());
             return false;
         }
-        return true;
+    return true;
     }
+
     public static function modifier_usr($id_user, $mail_user, $nom_user, $prenom_user, $date_naissance, $mdp_user, $pseudo_user, $conn) {
         try {
             
@@ -213,7 +232,7 @@ class User
             $stmt->bindParam(':nom_user', $nom_user);
             $stmt->bindParam(':prenom_user', $prenom_user);
             $stmt->bindParam(':date_naissance', $date_naissance);
-            $mdp_user=password_hash($mdp_user, 'PASSWORD_BCRYPT');
+            $mdp_user=password_hash($mdp_user, PASSWORD_BCRYPT);
             $stmt->bindParam(':mdp_user', $mdp_user);
             $stmt->bindParam(':pseudo_user', $pseudo_user);
             $stmt->bindParam(':id_user', $id_user);
@@ -260,5 +279,26 @@ class User
           return false;
         }
         return true;
+      }
+      //fonction qui permet de savoir quelles playlist un user a créé à partir de son id :
+      //fonction à vérifier
+        public static function playlist_user($id_user, $conn) {
+            try {
+                
+                $sql = 'SELECT id_playlist FROM playlist WHERE id_user = :id_user';
+                $stmt = $conn->prepare($sql);
+                $stmt->bindParam(':id_user', $id_user);
+                $stmt->execute();
+                $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                $id_playlist = array();
+                foreach ($result as $key => $value) {
+                    $id_playlist[] = $value['id_playlist'];
+                }
+            } catch (PDOException $exception) {
+                error_log('Connection error: ' . $exception->getMessage());
+                return false;
+            }
+            return $id_playlist;
+      
       }
 }

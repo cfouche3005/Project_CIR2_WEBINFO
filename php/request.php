@@ -72,21 +72,38 @@ $request = substr($_SERVER['PATH_INFO'], 1);
 $request = explode('/', $request); 
 $requestRessource = array_shift($request);
 */
+
 $method = $_SERVER['REQUEST_METHOD'];
 $path = $_SERVER['PATH_INFO'];
+/*
+$test=Album::info_album('2ecdc503-8f4e-488c-aee2-d35d87916021', $db);
+echo json_encode($test);
 
+$test = Album::info_album('2ecdc503-8f4e-488c-aee2-d35d87916021', $db);
+echo json_encode($test);
+*/
 switch ($method){
+    
     case 'GET':
-        if(isset($_GET['login'])){
-            $login = $_GET['login'];
-            $tweet = dbRequestTweets($connect, $login);
-            echo json_encode($tweet);
-        }
-        else{
-            $tweet = dbRequestTweets($connect);
-            echo json_encode($tweet);
+        switch($path){
+            case '/content/album':
+                if(isset($_GET['id_album'])){
+                    $id_album = $_GET['id_album'];
+                    $response = Album::info_album($id_album, $db);
+                    header('Content-Type: application/json; charset=utf-8');
+                    header('Cache-control: no-store, no-cache, must-revalidate');
+                    header('Pragma: no-cache');
+                    header('HTTP/1.1 200 OK');
+                    echo json_encode($response);
+                }
+                else{
+                    header('HTTP/1.1 400 Bad Request');
+                    
+                    exit;
+                }
         }
         break;
+        
     case 'POST':
         switch($path){
             case '/auth/register':
@@ -98,7 +115,12 @@ switch ($method){
                     $birthdate = $_POST['birthdate'];
                     $pseudo = $_POST['pseudo'];
                     $response = User::ajout_usr($mail, $lastname, $firstname, $birthdate, $password, $pseudo, 'tbd', $db);
+                    header('Content-Type: application/json; charset=utf-8');
+                    header('Cache-control: no-store, no-cache, must-revalidate');
+                    header('Pragma: no-cache');
+                    header('HTTP/1.1 200 OK');
                     echo json_encode($response);
+                    
                 }
                 else{
                     header('HTTP/1.1 400 Bad Request');
@@ -125,6 +147,7 @@ switch ($method){
 
         }
         break;
+        
     case 'DELETE':
             parse_str(file_get_contents("php://input"), $_DELETE);
             $login = $_DELETE['login'];
@@ -134,6 +157,7 @@ switch ($method){
         
         
         break;
+        
     }
     
 
