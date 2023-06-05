@@ -1,13 +1,18 @@
-body{
-    background-color:#242424 ;
-    color: white;
+html, body {
     height: 100%; /* Ajout de la hauteur de 100% pour centrer verticalement */
-    display: flex; /* Utilisation de flexbox pour centrer verticalement */
-    justify-content: center; /* Centrer horizontalement */
-    align-items: center; /* Centrer verticalement */
+    margin: 0; /* Suppression des marges par défaut */
+    padding: 0; /* Suppression des paddings par défaut */
 }
-#container{
-    /* mise en forme du conteneur principal */
+
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #242424;
+    color: white;
+}
+
+#container {
     width: 100%;
     max-width: 400px;
     display: flex;
@@ -19,7 +24,6 @@ body{
     padding: 30px;
     box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2), 0 5px 5px 0 rgba(0, 0, 0, 0.24);
 }
-
 form {
     /* mise en forme du formulaire */
     width: 100%;
