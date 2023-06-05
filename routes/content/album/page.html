@@ -18,6 +18,7 @@
         <link rel="stylesheet" href="../../../lib/styles/bootstrap.min.css">
         <link rel="stylesheet" href="../../../styles/styles.css">
         <link rel="stylesheet" href="page.css">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">
 
     </head>
     <body>
@@ -32,19 +33,21 @@
                         <p>Type</p>
                     </div>
                     <div class="d-flex me-auto align-self-center p-5 w-100 justify-content-between">
-                        <button type="submit" id='lire' style="width: 25%; margin-left: 5%">Lire</button>
-                        <button type="submit" id='ajour_biblio' style="width: 66%;">Ajouter à la bibliothèque</button>
+                        <button class="button_top" type="submit" id='lire' style="width: 25%; margin-left: 5%">Lire</button>
+                        <button class="button_top" type="submit" id='ajour_biblio' style="width: 66%;">Ajouter à la bibliothèque</button>
                     </div>
                 </div>
                 <br>
-                <p class="titre">Titre 1</p>
-                <p class="titre">Titre 2</p>
-                <p class="titre">Titre 3</p>
-                <p class="titre">Titre 4</p>
-                <p class="titre">Titre 5</p>
-                <p class="titre">Titre 6</p>
-                <p class="titre">Titre 7</p>
-                <p class="titre">Titre 8</p>
+                <div class="titre">
+                    <p id="track.place" class="card-title ps-1 align-self-center">1</p>
+                    <p id="track.name" class="card-title ps-4 align-self-center">test</p>
+                    <p id="track.artists" class="d-flex flex-row card-title ps-4 align-self-center" style="color: #858585!important;">test1</p>
+                    <p class="card-title ps-4 align-self-center" style="color: #858585!important;"><i class="bi bi-clock"></i></p>
+                    <p id="track.album" class="card-title ps-1 align-self-center" style="color: #858585!important; font-size: small">02:54</p>
+                    <button type="submit" class="ms-auto p-2 button_bot"><i class="bi bi-play-fill"></i></button>
+                    <button type="submit" class="p-2 button_bot"><i class="bi bi-heart-fill"></i></button>
+                    <button type="submit" class="p-2 button_bot"><i class="bi bi-plus"></i></button>
+                </div>
             </div>
         </div>
     </body>
