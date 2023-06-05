@@ -8,6 +8,7 @@ const routes = [
     {path: '/content/album', page: 'album', filepath: 'routes/content/album/page.html'},
     {path: '/content/playlist', page: 'playlist', filepath: 'routes/content/playlist/page.html'},
     {path: '/content/artist', page: 'artist', filepath: 'routes/content/artist/page.html'},
+    {path: '/error', page: 'error', filepath: 'routes/error/page.html'}
 ]
 
 let currentRoute = 'routes/home/page.html';
@@ -25,5 +26,4 @@ const router = () => {
     $('#inner-content').attr( 'src', window.location.pathname + currentRoute )
 }
 
-window.addEventListener('hashchange', router);
-window.addEventListener('load', router);
+export {router}
