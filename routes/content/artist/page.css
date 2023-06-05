@@ -1,0 +1,50 @@
+body{
+    background-color:#242424 ;
+    color: white;
+}
+
+#container{
+    /* mise en forme du conteneur principal */
+    width: 90%;
+    margin: 5% 5% 2%;
+    display: flex;
+    flex-direction: column;
+    background-color: #303030!important;
+    padding: 5%;
+    box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2), 0 5px 5px 0 rgba(0, 0, 0, 0.24);
+}
+
+.image_profil {
+    width: 25%;
+}
+
+.button_top{
+    /* mise en forme du bouton de soumission du formulaire */
+    text-align: center;
+    background-color: #454545!important;
+    width: 100%;
+    padding: 5%;
+    margin-bottom: 10%;
+    color: white;
+    border: 1px solid #858585;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+}
+
+.button_top:hover {
+    /* mise en forme du bouton de soumission du formulaire au survol */
+    background-color: white;
+    color: white;
+    border: 1px solid white;
+}
+
+.separator{
+    background-color: #454545!important;
+    text-align: center;
+}
+
+.card-button{
+    background-color: #454545!important;
+    text-align: center;
+    border: none;
+}
