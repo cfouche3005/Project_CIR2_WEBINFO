@@ -43,9 +43,9 @@ print_r(json_encode($test));
 /*
 User::ajout_usr("addmail@gmail.com", "autre", "penelope", "1998-05-16", "unmdpprojet", "or", "photo9",  $db);
 $test = User::info_usr($db);
-print_r(json_encode($test));
+print_r(json_encode($test));*/
 
-*/
+
 /*
 print_r(User::id_usr("leautrddeprojet@gmail.com", $db));
 */
