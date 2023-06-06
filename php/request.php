@@ -35,15 +35,19 @@ $test = Artist::photo_art($id, $db);
 print_r(json_encode($info_ar));*/
 
 /*
-Playlist::creer_playlist("RAP", 5, $db);
+Playlist::creer_playlist("POP", 3, $db);
 $test = Playlist::info_pla($db);
 print_r(json_encode($test));
 */
-/*
 
-User::ajout_usr("lemail@gmail.com", "auregs", "vfds", "2007-02-07", "jsp", "oui", "photo3",  $db);
-$test = Playlist::info_pla($db);
+
+User::ajout_usr("leautrddeprojet453@gmail.com", "autre", "prenom", "1998-05-16", "unmdpprojet", "or", "photo9",  $db);
+$test = User::info_usr($db);
 print_r(json_encode($test));
+
+
+/*
+print_r(User::id_usr("leautrddeprojet@gmail.com", $db));
 */
 
 /*
@@ -57,15 +61,16 @@ $test = User::info_usr($db);
 print_r(json_encode($test));
 */
 /*
-Playlist::delete_playlist(13, $db);
+Playlist::delete_playlist(3, $db);
 $test = Playlist::info_pla($db);
 print_r(json_encode($test));
 */
 /*
-User::delete_usr(2, $db);
+User::delete_usr(3, $db);
 $test = User::info_usr($db);
 print_r(json_encode($test));
-
+*/
+/*
 $method = $_SERVER['REQUEST_METHOD'];
 
 $request = substr($_SERVER['PATH_INFO'], 1);
@@ -73,18 +78,17 @@ $request = explode('/', $request);
 $requestRessource = array_shift($request);
 */
 
-//$method = $_SERVER['REQUEST_METHOD'];
-//$path = $_SERVER['PATH_INFO'];
+$method = $_SERVER['REQUEST_METHOD'];
+$path = $_SERVER['PATH_INFO'];
 /*
 $test=Album::info_album('2ecdc503-8f4e-488c-aee2-d35d87916021', $db);
 echo json_encode($test);
 */
-$test = Album::info_album('2ecdc503-8f4e-488c-aee2-d35d87916021', $db);
-echo json_encode($test);
+//$test = Album::info_album('2ecdc503-8f4e-488c-aee2-d35d87916021', $db);
+//echo json_encode($test);
 
-/*
+
 switch ($method){
-    
     case 'GET':
         switch($path){
             case '/content/album':
@@ -102,6 +106,22 @@ switch ($method){
                     
                     exit;
                 }
+                break;
+            case '/user/playlists':
+                if(isset($_GET['id_user'])){
+                    $id_user = $_GET['id_user'];
+                    $response = Playlist::playlist_user($id_user,$db);
+                    header('Content-Type: application/json; charset=utf-8');
+                    header('Cache-control: no-store, no-cache, must-revalidate');
+                    header('Pragma: no-cache');
+                    header('HTTP/1.1 200 OK');
+                    echo json_encode($response);
+                }
+                else{
+                    header('HTTP/1.1 400 Bad Request');
+                    exit;
+                }
+                break;
         }
         break;
         
@@ -134,34 +154,80 @@ switch ($method){
                     $mail = $_POST['mail'];
                     $password = $_POST['password'];
                     $response = User::login_usr($mail, $password, $db);
+                    header('Content-Type: application/json; charset=utf-8');
+                    header('Cache-control: no-store, no-cache, must-revalidate');
+                    header('Pragma: no-cache');
+                    header('HTTP/1.1 200 OK');
                     echo json_encode($response);
                 }
                 else{
                     header('HTTP/1.1 400 Bad Request');
                     exit;
                 }
-                break;    
+                break;
+            case '/user/playlists':
+                if(isset($_POST['nom_playlist']) && isset($_POST['id_user'])){
+                    $id_user = $_POST['id_user'];
+                    $nom_playlist = $_POST['nom_playlist'];
+                    $response = Playlist::creer_playlist($nom_playlist, $id_user, $db);
+                    header('Content-Type: application/json; charset=utf-8');
+                    header('Cache-control: no-store, no-cache, must-revalidate');
+                    header('Pragma: no-cache');
+                    header('HTTP/1.1 200 OK');
+                    echo json_encode($response);
+                }
+                else{
+                    header('HTTP/1.1 400 Bad Request');
+                    exit;
+                }
+                break;
 
             default :
                 header('HTTP/1.1 400 Bad Request');
                 exit;
-
         }
         break;
         
     case 'DELETE':
-            parse_str(file_get_contents("php://input"), $_DELETE);
-            $login = $_DELETE['login'];
-            $id= $request[0];
-            $tweet = dbDeleteTweet($connect, $id, $login);
-            echo json_encode($tweet);
-        
-        
+        switch($path) {
+            case '/user/playlists':
+                if(isset($_GET['id_playlist'])){
+                    $id_playlist = $_GET['id_playlist'];
+                    $response = Playlist::delete_playlist($id_playlist, $db);
+                    header('Content-Type: application/json; charset=utf-8');
+                    header('Cache-control: no-store, no-cache, must-revalidate');
+                    header('Pragma: no-cache');
+                    header('HTTP/1.1 200 OK');
+                    echo json_encode($response);
+                }
+                else{
+                    header('HTTP/1.1 400 Bad Request');
+                    exit;
+                }
+                break;
+        }
         break;
-        
-    }
-*/
-    
 
-//print_r($_SERVER['PATH_INFO']);
+    case 'PUT':
+        switch($path) {
+            case '/user/playlists':
+                parse_str(file_get_contents('php://input'), $_PUT);
+                if(isset($_PUT['nom_playlist']) && isset($_PUT['id_playlist'])){
+                    $id_playlist = $_PUT['id_playlist'];
+                    $nom_playlist = $_PUT['nom_playlist'];
+                    $response = Playlist::modifier_playlist($nom_playlist, $id_playlist, $db);
+                    header('Content-Type: application/json; charset=utf-8');
+                    header('Cache-control: no-store, no-cache, must-revalidate');
+                    header('Pragma: no-cache');
+                    header('HTTP/1.1 200 OK');
+                    echo json_encode($response);
+                }
+                else{
+                    header('HTTP/1.1 400 Bad PUT Request');
+                    exit;
+                }
+                break;
+        }
+        break;
+}
 ?>

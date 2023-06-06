@@ -25,7 +25,7 @@ class User
             
             $sql = 'SELECT id_user FROM users WHERE mail_user = :mail_user';
             $stmt = $conn->prepare($sql);
-            $stmt->bindParam(':id_user', $mail_user);
+            $stmt->bindParam(':mail_user', $mail_user);
             $stmt->execute();
             $result = $stmt->fetch(PDO::FETCH_ASSOC);
         } catch (PDOException $exception) {
@@ -192,7 +192,7 @@ class User
         try {
             
             $sql = 'INSERT INTO users (mail_user, nom_user, prenom_user, date_naissance, mdp_user, pseudo_user, photo_user, id_user) VALUES (:mail_user, :nom_user, :prenom_user, :date_naissance, :mdp_user, :pseudo_user, :photo_user, DEFAULT)';
-            $stmt = $conn->prepare($sql);
+            
             //vérification si le mail n'existe pas déjà 
             $mail_exist= 'SELECT COUNT(*) FROM users WHERE mail_user = :mail_user';
             $stmt = $conn->prepare($mail_exist);
@@ -204,6 +204,7 @@ class User
                 return "mail-exist";
             }
             else{
+                $stmt = $conn->prepare($sql);
                 $stmt->bindParam(':mail_user', $mail_user);
                 $stmt->bindParam(':nom_user', $nom_user);
                 $stmt->bindParam(':prenom_user', $prenom_user);

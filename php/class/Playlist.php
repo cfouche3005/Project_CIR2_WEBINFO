@@ -83,7 +83,6 @@ class Playlist
     }
     public static function creer_playlist($nom_playlist, $id_user, $conn) {
         try {
-            
             $sql = 'INSERT INTO playlist (nom_playlist, date_creation, id_user, date_modif) VALUES (:nom_playlist, NOW(), :id_user, NOW())';
             //vérification si la playlist existe déjà :
             $sqlVerif = 'SELECT COUNT(*) FROM playlist WHERE nom_playlist = :nom_playlist AND id_user = :id_user';
@@ -123,12 +122,11 @@ class Playlist
             $stmt->bindParam(':id_playlist', $id_playlist);
             $stmt->execute();
             $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            return true;
         } catch (PDOException $exception) {
             error_log('Connection error: ' . $exception->getMessage());
             return false;
         }
-        
-
     }
     public static function delete_playlist($id_playlist, $conn)
     {
@@ -202,5 +200,19 @@ class Playlist
             }
             
             
-    
+
+    // Récupère les playlists d'un user
+    public static function playlist_user($id_user, $conn) {
+        try {
+            $sql = 'SELECT id_playlist, nom_playlist, date_modif FROM Playlist WHERE id_user = :id_user';
+            $stmt = $conn->prepare($sql);
+            $stmt->bindParam(':id_user', $id_user);
+            $stmt->execute();
+            $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        } catch (PDOException $exception) {
+            error_log('Connection error: ' . $exception->getMessage());
+            return false;
+        }
+        return $result;
+    }
 }
