@@ -6,7 +6,7 @@ require_once('class/Album.php');
 require_once('class/Music.php');
 require_once('class/Artist.php');
 require_once('class/Playlist.php');
-require_once('class/User.php');
+require_once('class/Users.php');
 
 /*function print_array($array) {
     print("<pre>" . print_r($array, true) . "</pre>");
@@ -21,11 +21,11 @@ $info_al = Album::info_alb($db);
 $info_mu = Music::info_mus($db);
 $info_ar = Artist::info_art($db);
 $info_pl = Playlist::info_pla($db);
-$info_us = User::info_usr($db);
+$info_us = Users::info_usr($db);
 #print_array($info_al);
 */
 /*
-$mail= User::mail_usr(1, $db);
+$mail= Users::mail_usr(1, $db);
 print_r(json_encode($mail));
 */
 
@@ -41,13 +41,13 @@ print_r(json_encode($test));
 */
 
 /*
-User::ajout_usr("addmail@gmail.com", "autre", "penelope", "1998-05-16", "unmdpprojet", "or", "photo9",  $db);
-$test = User::info_usr($db);
+Users::ajout_usr("addmail@gmail.com", "autre", "penelope", "1998-05-16", "unmdpprojet", "or", "photo9",  $db);
+$test = Users::info_usr($db);
 print_r(json_encode($test));*/
 
 
 /*
-print_r(User::id_usr("leautrddeprojet@gmail.com", $db));
+print_r(Users::id_usr("leautrddeprojet@gmail.com", $db));
 */
 
 /*
@@ -56,8 +56,8 @@ $test = Playlist::info_pla($db);
 print_r(json_encode($test));
 */
 /*
-User::modifier_usr(1, "cfouche@gmail.com", "c", "fouche", "2003-08-12", "123", "FC-fou", $db);
-$test = User::info_usr($db);
+Users::modifier_usr(1, "cfouche@gmail.com", "c", "fouche", "2003-08-12", "123", "FC-fou", $db);
+$test = Users::info_usr($db);
 print_r(json_encode($test));
 */
 /*
@@ -66,8 +66,8 @@ $test = Playlist::info_pla($db);
 print_r(json_encode($test));
 */
 /*
-User::delete_usr(3, $db);
-$test = User::info_usr($db);
+Users::delete_usr(3, $db);
+$test = Users::info_usr($db);
 print_r(json_encode($test));
 */
 /*
@@ -94,7 +94,7 @@ echo json_encode($test);
 
 //print_r(json_encode(Playlist::get_music_playlist(1, $db)));
 
-//print_r(json_encode(User::info_usr_by_id(1, $db)));
+//print_r(json_encode(Users::info_usr_by_id(1, $db)));
 
 
 
@@ -184,6 +184,22 @@ switch ($method){
                     exit;
                 }
                 break;
+            case '/user/album/like':
+                if(isset($_GET['id_user']) && isset($_GET['id_album'])){
+                    $id_user = $_GET['id_user'];
+                    $id_album = $_GET['id_album'];
+                    $response = Users::usr_aime_album_verif($id_user, $id_album, $db);
+                    header('Content-Type: application/json; charset=utf-8');
+                    header('Cache-control: no-store, no-cache, must-revalidate');
+                    header('Pragma: no-cache');
+                    header('HTTP/1.1 200 OK');
+                    echo json_encode($response);
+                }
+                else{
+                    header('HTTP/1.1 400 Bad Request');
+                    exit;
+                }
+                break;
         }
         break;
         
@@ -197,7 +213,7 @@ switch ($method){
                     $password = $_POST['password'];
                     $birthdate = $_POST['birthdate'];
                     $pseudo = $_POST['pseudo'];
-                    $response = User::ajout_usr($mail, $lastname, $firstname, $birthdate, $password, $pseudo, 'tbd', $db);
+                    $response = Users::ajout_usr($mail, $lastname, $firstname, $birthdate, $password, $pseudo, 'tbd', $db);
                     header('Content-Type: application/json; charset=utf-8');
                     header('Cache-control: no-store, no-cache, must-revalidate');
                     header('Pragma: no-cache');
@@ -214,7 +230,7 @@ switch ($method){
                 if(isset($_POST['mail']) && isset($_POST['password'])){
                     $mail = $_POST['mail'];
                     $password = $_POST['password'];
-                    $response = User::login_usr($mail, $password, $db);
+                    $response = Users::login_usr($mail, $password, $db);
                     header('Content-Type: application/json; charset=utf-8');
                     header('Cache-control: no-store, no-cache, must-revalidate');
                     header('Pragma: no-cache');
@@ -277,6 +293,22 @@ switch ($method){
                     exit;
                 }
                 break;
+            case '/user/album/like':
+                if(isset($_POST['id_user']) && isset($_POST['id_album'])){
+                    $id_album = $_POST['id_album'];
+                    $id_user = $_POST['id_user'];
+                    $response = Users::usr_aime_album($id_user, $id_album, $db);
+                    header('Content-Type: application/json; charset=utf-8');
+                    header('Cache-control: no-store, no-cache, must-revalidate');
+                    header('Pragma: no-cache');
+                    header('HTTP/1.1 200 OK');
+                    echo json_encode($response);
+                }
+                else{
+                    header('HTTP/1.1 400 Bad Request');
+                    exit;
+                }
+                break;
             default :
                 header('HTTP/1.1 400 Bad Request');
                 exit;
@@ -333,6 +365,22 @@ switch ($method){
                     exit;
                 }
                 break;
+            case '/user/album/like':
+                if(isset($_GET['id_user']) && isset($_GET['id_album'])){
+                    $id_user = $_GET['id_user'];
+                    $id_album = $_GET['id_album'];
+                    $response = Users::usr_aime_album_delete($id_user, $id_album, $db);
+                    header('Content-Type: application/json; charset=utf-8');
+                    header('Cache-control: no-store, no-cache, must-revalidate');
+                    header('Pragma: no-cache');
+                    header('HTTP/1.1 200 OK');
+                    echo json_encode($response);
+                }
+                else{
+                    header('HTTP/1.1 400 Bad Request');
+                    exit;
+                }
+                break;
         }
         break;
 
@@ -379,7 +427,7 @@ switch ($method){
                     $mail = $_PUT['mail'];
                     $birthdate = $_PUT['birthdate'];
                     $pseudo = $_PUT['pseudo'];
-                    $response = User::modifier_usr_sans_mdp($id_user, $mail, $lastname, $firstname, $birthdate, $pseudo, $db);
+                    $response = Users::modifier_usr_sans_mdp($id_user, $mail, $lastname, $firstname, $birthdate, $pseudo, $db);
                     header('Content-Type: application/json; charset=utf-8');
                     header('Cache-control: no-store, no-cache, must-revalidate');
                     header('Pragma: no-cache');

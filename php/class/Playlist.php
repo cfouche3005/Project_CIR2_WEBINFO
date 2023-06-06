@@ -314,7 +314,7 @@ class Playlist
             
             
 
-    // Récupère les playlists d'un user
+    //Récupère les playlists d'un user
     public static function playlist_user($id_user, $conn) { //fonction à vérifier
         try {
             $sql = 'SELECT id_playlist, nom_playlist, date_modif FROM Playlist WHERE id_user = :id_user';

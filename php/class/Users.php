@@ -1,6 +1,6 @@
 <?php
 
-class User
+class Users
 {
     // Récupère les infos de tous les utilisateurs
     public static function info_usr($conn) {
@@ -279,7 +279,7 @@ class User
                 $stmt4->execute();
                 $result = $stmt4->fetchAll(PDO::FETCH_ASSOC);
             }
-            return User::info_usr_by_id($id_user, $conn);
+            return Users::info_usr_by_id($id_user, $conn);
         } catch (PDOException $exception) {
             error_log('Connection error: ' . $exception->getMessage());
             return false;
@@ -313,7 +313,7 @@ class User
                 $stmt4->execute();
                 $result = $stmt4->fetchAll(PDO::FETCH_ASSOC);
             }
-            return User::info_usr_by_id($id_user, $conn);
+            return Users::info_usr_by_id($id_user, $conn);
         } catch (PDOException $exception) {
             error_log('Connection error: ' . $exception->getMessage());
             return false;
@@ -336,8 +336,9 @@ class User
         }
         return true;
       }
-      //fonction qui permet de savoir quelles playlist un user a créé à partir de son id :
-      //fonction à vérifier
+
+      //fonction qui permet de savoir quelles playlists un user a créé à partir de son id :
+    /*
         public static function playlist_user($id_user, $conn) {
             try {
                 
@@ -356,7 +357,7 @@ class User
             }
             return $id_playlist;
       
-      }
+      }*/
 
     public static function usr_aime_album($id_user, $id_album, $conn) {
         try {
@@ -373,14 +374,14 @@ class User
         }
     }
 
-    public static function usr_aime_album_verif($id_user, $id_album, $conn) {
+        public static function usr_aime_album_verif($id_user, $id_album, $conn) {
         try {
             $sql= 'SELECT COUNT(*) FROM aime_album WHERE id_user = :id_user AND id_album = :id_album';
             $stmt = $conn->prepare($sql);
             $stmt->bindParam(':id_album', $id_album);
             $stmt->bindParam(':id_user', $id_user);
             $stmt->execute();
-            $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            $result = $stmt->fetch(PDO::FETCH_ASSOC);
             if ($result['count']>=1){
                 return true;
             }
