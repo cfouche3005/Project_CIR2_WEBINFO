@@ -204,22 +204,25 @@ class User
                 return "mail-exist";
             }
             else{
-                $stmt = $conn->prepare($sql);
-                $stmt->bindParam(':mail_user', $mail_user);
-                $stmt->bindParam(':nom_user', $nom_user);
-                $stmt->bindParam(':prenom_user', $prenom_user);
-                $stmt->bindParam(':date_naissance', $date_naissance);
+                $stmt4 = $conn->prepare($sql);
+                $stmt4->bindParam(':mail_user', $mail_user);
+                $stmt4->bindParam(':nom_user', $nom_user);
+                $stmt4->bindParam(':prenom_user', $prenom_user);
+                $stmt4->bindParam(':date_naissance', $date_naissance);
                 $mdp_user= password_hash($mdp_user, PASSWORD_BCRYPT);
-                $stmt->bindParam(':mdp_user', $mdp_user);
-                $stmt->bindParam(':pseudo_user', $pseudo_user);
-                $stmt->bindParam(':photo_user', $photo_user);
-                $stmt->execute();
-                $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
-                //On crée une playlist Favoris pour l'utilisateur à l'aide de la fonction creer_playlist de la classe Playlist :
-                //on commence par récupérer l'id de l'utilisateur :
-                $id_user = User::id_usr($mail_user, $conn);
-                //on crée la playlist Favoris :
-                Playlist::creer_playlist("Favoris", $id_user, $conn);
+                $stmt4->bindParam(':mdp_user', $mdp_user);
+                $stmt4->bindParam(':pseudo_user', $pseudo_user);
+                $stmt4->bindParam(':photo_user', $photo_user);
+                $stmt4->execute();
+                $result = $stmt4->fetchAll(PDO::FETCH_ASSOC);
+                //on crée une playlist par défaut " Favoris" pour l'utilisateur :
+                $playlistFav = 'INSERT INTO playlist (nom_playlist, date_creation, date_modif, id_user) VALUES (:nom_playlist, NOW(), NOW(), (SELECT id_user FROM users WHERE mail_user = :mail_user))';
+                $stmt2 = $conn->prepare($playlistFav);
+                $nom_playlist = "Favoris";
+                $stmt2->bindParam(':nom_playlist', $nom_playlist);
+                $stmt2->bindParam(':mail_user', $mail_user);
+                $stmt2->execute();
+                
             }
         
         }catch (PDOException $exception) {
