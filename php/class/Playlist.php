@@ -151,29 +151,29 @@ class Playlist
         }
         return true;
       }
-      //fonction qui ajoute une musique à une playlist :
-        public static function add_music_playlist($id_playlist, $id_music, $conn)
+    //fonction qui ajoute une musique à une playlist :
+    public static function add_music_playlist($id_playlist, $id_music, $conn) //fonciton à vérifier
+    {
+        try
+        {
+            $sql = 'INSERT INTO playlist_music (id_playlist, id_music, date_modif) VALUES (:id_playlist, :id_music, NOW())';
+            $statement = $conn->prepare($sql);
+            $statement->bindParam(':id_playlist', $id_playlist);
+            $statement->bindParam(':id_music', $id_music);
+            $statement->execute();
+        }
+        catch (PDOException $exception)
+        {
+            error_log('Request error: '.$exception->getMessage());
+            return false;
+        }
+        return true;
+    }
+    //fonction qui supprime une musique d'une playlist :
+    public static function delete_music_playlist($id_playlist, $id_music, $conn) //fonction à vérifier
         {
             try
             {
-                $sql = 'INSERT INTO playlist_music (id_playlist, id_music, date_modif) VALUES (:id_playlist, :id_music, NOW())';
-                $statement = $conn->prepare($sql);
-                $statement->bindParam(':id_playlist', $id_playlist);
-                $statement->bindParam(':id_music', $id_music);
-                $statement->execute();
-            }
-            catch (PDOException $exception)
-            {
-                error_log('Request error: '.$exception->getMessage());
-                return false;
-            }
-            return true;
-            }
-            //fonction qui supprime une musique d'une playlist :
-            public static function delete_music_playlist($id_playlist, $id_music, $conn)
-            {
-                try
-                {
                 $request = 'DELETE FROM playlist_music WHERE id_playlist=:id_playlist AND id_music=:id_music';
                 $statement = $conn->prepare($request);
                 $statement->bindParam(':id_playlist', $id_playlist);
@@ -186,30 +186,66 @@ class Playlist
                 return false;
                 }
                 return true;
-            }
+            }       
             //fonction qui récupère les musiques d'une playlist :
-            public static function get_music_playlist($id_playlist, $conn)
-            {
-                try
-                {
-                    $request = 'SELECT * FROM playlist_music WHERE id_playlist=:id_playlist';
-                    $statement = $conn->prepare($request);
-                    $statement->bindParam(':id_playlist', $id_playlist);
-                    $statement->execute();
-                    $result = $statement->fetchAll(PDO::FETCH_ASSOC);
+    public static function get_music_playlist($id_playlist, $conn) //fonction à vérifier
+        {
+            try
+            {   
+                //$sqlMusic = 'SELECT m.id_music, lien_music, title_music, time_music FROM music m JOIN possede pm on m.id_music=pm.id_music JOIN playlist pl ON pm.id_playlist=pl.id_playlist WHERE pl.id_playlist = :id_playlist';
+                //$sqlMusic= 'SELECT m.id_music, lien_music, title_music, time_music FROM music m JOIN playlist_music pm on m.id_music=pm.id_music JOIN playlist pl ON pm.id_playlist=pl.id_playlist WHERE pl.id_playlist = :id_playlist';
+                //$sqlMusic= 'SELECT m.id_music, lien_music, title_music, time_music FROM music m JOIN possede p on m.id_music=p.id_music JOIN playlist pl ON p.id_music=pl.id_music WHERE pl.id_playlist = :id_playlist';
+                //$sqlArtist= 'SELECT a.id_artist, nom_artist FROM artist a JOIN compose c ON a.id_artist=c.id_artist JOIN music m ON c.id_music=m.id_music WHERE m.id_music = :id_music';
+                $sqlArtist='SELECT a.id_artist,pseudo_artist FROM artist a JOIN compose_music cm on a.id_artist = cm.id_artist WHERE cm.id_music = :id_music';
+                $sqlMusic = 'SELECT m.id_music, lien_music, title_music, time_music FROM music m JOIN possede p on m.id_music=p.id_music JOIN playlist pl ON p.id_playlist=pl.id_playlist WHERE pl.id_playlist = :id_playlist';
+                //$sqlArtist = 'SELECT a.id_artist,pseudo_artist FROM artist a JOIN compose_music cm on a.id_artist = cm.id_artist JOIN music m on cm.id_artist=m.id_artist JOIN possede p on m.id_artist=p.id_artist JOIN playlist pa on p.id_artist=pa.id_artist WHERE pa.id_playlist = :id_playlist';
+                //$sqlPlaylist = 'SELECT * FROM playlist WHERE id_playlist=:id_playlist';
+                $sqlPlaylist = 'SELECT id_playlist, nom_playlist, date_creation, date_modif from playlist where id_playlist=:id_playlist';
+                $stmt = $conn->prepare($sqlPlaylist);
+                $stmt->bindParam(':id_playlist', $id_playlist);
+                $stmt->execute();
+                $resultPlaylist = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            
+                $stmt1 = $conn->prepare($sqlMusic);
+                $stmt1->bindParam(':id_playlist', $id_playlist);
+                $stmt1->execute();
+                $resultMusic = $stmt1->fetchAll(PDO::FETCH_ASSOC);
+
+                $Endresult  = array();
+                foreach ($resultMusic as $music ) {
+                    $stmt2 = $conn->prepare($sqlArtist);
+                    $stmt2->bindParam(':id_music', $music['id_music']);
+                    $stmt2->execute();
+                    $resultArtist = $stmt2->fetchAll(PDO::FETCH_ASSOC);
+                    // $resultMusic[$music]['artist']=$resultArtist;
+                    $music['artists']=$resultArtist;
+                    array_push($Endresult,$music);
                 }
-                catch (PDOException $exception)
-                {
-                    error_log('Request error: '.$exception->getMessage());
-                    return false;
-                }
-                return $result;
+                
+                // $fresult['artist']=$resultArtist;
+                $fresult['album']=$resultPlaylist;
+                $fresult['musics']=$Endresult;
+                return $fresult;
+                
+                /*
+                $statement = $conn->prepare($request);
+                $statement->bindParam(':id_playlist', $id_playlist);
+                $statement->execute();
+                $result = $statement->fetchAll(PDO::FETCH_ASSOC);
+                */
             }
+            catch (PDOException $exception)
+            {
+                error_log('Request error: '.$exception->getMessage());
+                return false;
+            }
+            
+        }
             
             
 
     // Récupère les playlists d'un user
-    public static function playlist_user($id_user, $conn) {
+    public static function playlist_user($id_user, $conn) { //fonction à vérifier
         try {
             $sql = 'SELECT id_playlist, nom_playlist, date_modif FROM Playlist WHERE id_user = :id_user';
             $stmt = $conn->prepare($sql);

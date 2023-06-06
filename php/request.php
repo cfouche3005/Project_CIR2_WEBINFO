@@ -43,7 +43,9 @@ print_r(json_encode($test));
 /*
 User::ajout_usr("addmail@gmail.com", "autre", "penelope", "1998-05-16", "unmdpprojet", "or", "photo9",  $db);
 $test = User::info_usr($db);
-print_r(json_encode($test));*/
+print_r(json_encode($test));
+*/
+//print_r(json_encode(User::modifier_usr_sans_mdp(2, "autremail8@gmail.com", "autre", "penelope", "1998-05-16", "or",  $db)));
 
 
 /*
@@ -78,8 +80,7 @@ $request = explode('/', $request);
 $requestRessource = array_shift($request);
 */
 
-$method = $_SERVER['REQUEST_METHOD'];
-$path = $_SERVER['PATH_INFO'];
+
 /*
 $test=Album::info_album('2ecdc503-8f4e-488c-aee2-d35d87916021', $db);
 echo json_encode($test);
@@ -87,9 +88,14 @@ echo json_encode($test);
 //$test = Album::info_album('2ecdc503-8f4e-488c-aee2-d35d87916021', $db);
 //echo json_encode($test);
 
+//print_r(json_encode(Playlist::get_music_playlist(1, $db)));
+
+//print_r(json_encode(User::info_usr_by_id(1, $db)));
 
 
 
+$method = $_SERVER['REQUEST_METHOD'];
+$path = $_SERVER['PATH_INFO'];
 
 switch ($method){
     case 'GET':
@@ -274,6 +280,43 @@ switch ($method){
                     header('HTTP/1.1 200 OK');
                     echo json_encode($response);
                 }
+                else{
+                    header('HTTP/1.1 400 Bad PUT Request');
+                    exit;
+                }
+                break;
+            case '/user/profile':
+                parse_str(file_get_contents('php://input'), $_PUT);
+                if(isset($_PUT['id_user']) && isset($_PUT['lastname']) && isset($_PUT['surname']) && isset($_PUT['mail']) && isset($_PUT['password']) && isset($_PUT['pseudo']) && isset($_PUT['birthdate']) && isset($_PUT['mp']) && $_PUT['mp'] == true){
+                    $id_user = $_PUT['id_user'];
+                    $lastname = $_PUT['lastname'];
+                    $firstname = $_PUT['surname'];
+                    $mail = $_PUT['mail'];
+                    $password = $_PUT['password'];
+                    $birthdate = $_PUT['birthdate'];
+                    $pseudo = $_PUT['pseudo'];
+                    $response = User::modifier_usr($id_user, $mail, $lastname, $firstname, $birthdate, $password, $pseudo, 'tbd', $db);
+                    header('Content-Type: application/json; charset=utf-8');
+                    header('Cache-control: no-store, no-cache, must-revalidate');
+                    header('Pragma: no-cache');
+                    header('HTTP/1.1 200 OK');
+                    echo json_encode($response);
+                }
+                elseif(isset($_PUT['id_user']) && isset($_PUT['lastname']) && isset($_PUT['surname']) && isset($_PUT['mail']) && isset($_PUT['pseudo']) && isset($_PUT['birthdate']) && isset($_PUT['mp']) && $_PUT['mp'] == false){
+                    $id_user = $_PUT['id_user'];
+                    $lastname = $_PUT['lastname'];
+                    $firstname = $_PUT['surname'];
+                    $mail = $_PUT['mail'];
+                    $birthdate = $_PUT['birthdate'];
+                    $pseudo = $_PUT['pseudo'];
+                    $response = User::modifier_usr($id_user, $mail, $lastname, $firstname, $birthdate, 'tbd', $pseudo, 'tbd', $db);
+                    header('Content-Type: application/json; charset=utf-8');
+                    header('Cache-control: no-store, no-cache, must-revalidate');
+                    header('Pragma: no-cache');
+                    header('HTTP/1.1 200 OK');
+                    echo json_encode($response);
+                }
+
                 else{
                     header('HTTP/1.1 400 Bad PUT Request');
                     exit;

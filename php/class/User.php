@@ -18,6 +18,23 @@ class User
         }
         return $result;
     }
+    // Récupérer les infos d'un utilisateur à partir de son id
+    public static function info_usr_by_id($id_user, $conn) {
+        try {
+            
+            if($conn){
+                $sql = 'SELECT * FROM users where id_user = :id_user';
+                $stmt = $conn->prepare($sql);
+                $stmt->bindParam(':id_user', $id_user);
+                $stmt->execute();
+                $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            }
+        } catch (PDOException $exception) {
+            error_log('Connection error: ' . $exception->getMessage());
+            return false;
+        }
+        return $result;
+    }
 
     // Récupère l'id de l'utilisateur à partir de son mail
     public static function id_usr($mail_user, $conn) {
@@ -239,18 +256,30 @@ class User
             
             //$sql = 'UPDATE playlist SET nom_playlist = :nom_playlist, date_modif = NOW() WHERE id_playlist = :id_playlist';
             //$sql = 'UPDATE playlist SET nom_playlist, date_modif WHERE id_playlist = :id_playlist AND nom_playlist = :nom_playlist AND date_modif = NOW()';
-            $stmt = $conn->prepare($sql);
+            //vérification si le mail n'existe pas déjà 
+            $mail_exist= 'SELECT COUNT(*) FROM users WHERE mail_user = :mail_user';
+            $stmt = $conn->prepare($mail_exist);
             $stmt->bindParam(':mail_user', $mail_user);
-            $stmt->bindParam(':nom_user', $nom_user);
-            $stmt->bindParam(':prenom_user', $prenom_user);
-            $stmt->bindParam(':date_naissance', $date_naissance);
-            $mdp_user=password_hash($mdp_user, PASSWORD_BCRYPT);
-            $stmt->bindParam(':mdp_user', $mdp_user);
-            $stmt->bindParam(':pseudo_user', $pseudo_user);
-            $stmt->bindParam(':id_user', $id_user);
             $stmt->execute();
-            $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
-            return true;
+            $resultMail = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            if($resultMail['count']>=1){
+                return "mail-exist";
+            }
+            else {
+                $stmt4 = $conn->prepare($sql);
+                $stmt4->bindParam(':mail_user', $mail_user);
+                $stmt4->bindParam(':nom_user', $nom_user);
+                $stmt4->bindParam(':prenom_user', $prenom_user);
+                $stmt4->bindParam(':date_naissance', $date_naissance);
+                $mdp_user= password_hash($mdp_user, PASSWORD_BCRYPT);
+                $stmt4->bindParam(':mdp_user', $mdp_user);
+                $stmt4->bindParam(':pseudo_user', $pseudo_user);
+                $stmt4->bindParam(':id_user', $id_user);
+                $stmt4->execute();
+                $result = $stmt4->fetchAll(PDO::FETCH_ASSOC);
+            }
+            return User::info_usr_by_id($id_user, $conn);
         } catch (PDOException $exception) {
             error_log('Connection error: ' . $exception->getMessage());
             return false;
@@ -264,16 +293,27 @@ class User
             
             //$sql = 'UPDATE playlist SET nom_playlist = :nom_playlist, date_modif = NOW() WHERE id_playlist = :id_playlist';
             //$sql = 'UPDATE playlist SET nom_playlist, date_modif WHERE id_playlist = :id_playlist AND nom_playlist = :nom_playlist AND date_modif = NOW()';
-            $stmt = $conn->prepare($sql);
+            $mail_exist= 'SELECT COUNT(*) FROM users WHERE mail_user = :mail_user';
+            $stmt = $conn->prepare($mail_exist);
             $stmt->bindParam(':mail_user', $mail_user);
-            $stmt->bindParam(':nom_user', $nom_user);
-            $stmt->bindParam(':prenom_user', $prenom_user);
-            $stmt->bindParam(':date_naissance', $date_naissance);
-            $stmt->bindParam(':pseudo_user', $pseudo_user);
-            $stmt->bindParam(':id_user', $id_user);
             $stmt->execute();
-            $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
-            return true;
+            $resultMail = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            if($resultMail['count']>=1){
+                return "mail-exist";
+            }
+            else{
+                $stmt4 = $conn->prepare($sql);
+                $stmt4->bindParam(':mail_user', $mail_user);
+                $stmt4->bindParam(':nom_user', $nom_user);
+                $stmt4->bindParam(':prenom_user', $prenom_user);
+                $stmt4->bindParam(':date_naissance', $date_naissance);
+                $stmt4->bindParam(':pseudo_user', $pseudo_user);
+                $stmt4->bindParam(':id_user', $id_user);
+                $stmt4->execute();
+                $result = $stmt4->fetchAll(PDO::FETCH_ASSOC);
+            }
+            return User::info_usr_by_id($id_user, $conn);
         } catch (PDOException $exception) {
             error_log('Connection error: ' . $exception->getMessage());
             return false;
