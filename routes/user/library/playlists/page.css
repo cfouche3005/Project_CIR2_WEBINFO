@@ -26,3 +26,22 @@ body{
     text-align: center;
     border: none;
 }
+
+.button_top{
+    /* mise en forme du bouton de soumission du formulaire */
+    text-align: center;
+    background-color: #454545!important;
+    color: white;
+    justify-content: center;
+    border: 1px solid #858585;
+    cursor: pointer;
+    font-size: large;
+    transition: all 0.3s ease-in-out;
+}
+
+.button_top:hover {
+    /* mise en forme du bouton de soumission du formulaire au survol */
+    background-color: white;
+    color: white;
+    border: 1px solid white;
+}
