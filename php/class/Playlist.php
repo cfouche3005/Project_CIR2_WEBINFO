@@ -88,9 +88,12 @@ class Playlist
             //vérification si la playlist existe déjà :
             $sqlVerif = 'SELECT COUNT(*) FROM playlist WHERE nom_playlist = :nom_playlist AND id_user = :id_user';
             $stmtVerif = $conn->prepare($sqlVerif);
+            $stmtVerif->bindParam(':nom_playlist', $nom_playlist);
+            $stmtVerif->bindParam(':id_user', $id_user);
             $stmtVerif->execute();
-            $resultVerif = $stmtVerif->fetchAll(PDO::FETCH_ASSOC);
-            if($resultVerif['count']>=1){
+            $resultVerif = $stmtVerif->fetch(PDO::FETCH_ASSOC);
+            
+            if($resultVerif['count']==1){
                 return "playlist-exist";
             }
             //On vérifie que le nom de la playlist n'est pas "Favoris" ou "favoris" :
@@ -106,6 +109,7 @@ class Playlist
         } catch (PDOException $exception) {
             error_log('Connection error: ' . $exception->getMessage());
             return false;
+            
         }
         return true;
     }
@@ -142,5 +146,61 @@ class Playlist
         }
         return true;
       }
+      //fonction qui ajoute une musique à une playlist :
+        public static function add_music_playlist($id_playlist, $id_music, $conn)
+        {
+            try
+            {
+                $sql = 'INSERT INTO playlist_music (id_playlist, id_music, date_modif) VALUES (:id_playlist, :id_music, NOW())';
+                $statement = $conn->prepare($sql);
+                $statement->bindParam(':id_playlist', $id_playlist);
+                $statement->bindParam(':id_music', $id_music);
+                $statement->execute();
+            }
+            catch (PDOException $exception)
+            {
+                error_log('Request error: '.$exception->getMessage());
+                return false;
+            }
+            return true;
+            }
+            //fonction qui supprime une musique d'une playlist :
+            public static function delete_music_playlist($id_playlist, $id_music, $conn)
+            {
+                try
+                {
+                $request = 'DELETE FROM playlist_music WHERE id_playlist=:id_playlist AND id_music=:id_music';
+                $statement = $conn->prepare($request);
+                $statement->bindParam(':id_playlist', $id_playlist);
+                $statement->bindParam(':id_music', $id_music);
+                $statement->execute();
+                }
+                catch (PDOException $exception)
+                {
+                error_log('Request error: '.$exception->getMessage());
+                return false;
+                }
+                return true;
+            }
+            //fonction qui récupère les musiques d'une playlist :
+            public static function get_music_playlist($id_playlist, $conn)
+            {
+                try
+                {
+                    $request = 'SELECT * FROM playlist_music WHERE id_playlist=:id_playlist';
+                    $statement = $conn->prepare($request);
+                    $statement->bindParam(':id_playlist', $id_playlist);
+                    $statement->execute();
+                    $result = $statement->fetchAll(PDO::FETCH_ASSOC);
+                }
+                catch (PDOException $exception)
+                {
+                    error_log('Request error: '.$exception->getMessage());
+                    return false;
+                }
+                return $result;
+            }
+            
+            
     
 }
