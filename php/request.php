@@ -315,7 +315,7 @@ switch ($method){
                     $password = $_PUT['password'];
                     $birthdate = $_PUT['birthdate'];
                     $pseudo = $_PUT['pseudo'];
-                    $response = User::modifier_usr($id_user, $mail, $lastname, $firstname, $birthdate, $password, $pseudo, 'tbd', $db);
+                    $response = User::modifier_usr($id_user, $mail, $lastname, $firstname, $birthdate, $password, $pseudo, $db);
                     header('Content-Type: application/json; charset=utf-8');
                     header('Cache-control: no-store, no-cache, must-revalidate');
                     header('Pragma: no-cache');
@@ -329,7 +329,7 @@ switch ($method){
                     $mail = $_PUT['mail'];
                     $birthdate = $_PUT['birthdate'];
                     $pseudo = $_PUT['pseudo'];
-                    $response = User::modifier_usr($id_user, $mail, $lastname, $firstname, $birthdate, 'tbd', $pseudo, 'tbd', $db);
+                    $response = User::modifier_usr_sans_mdp($id_user, $mail, $lastname, $firstname, $birthdate, $pseudo, $db);
                     header('Content-Type: application/json; charset=utf-8');
                     header('Cache-control: no-store, no-cache, must-revalidate');
                     header('Pragma: no-cache');
