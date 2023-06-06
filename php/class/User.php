@@ -195,8 +195,13 @@ class User
             $stmt = $conn->prepare($sql);
             //vérification si le mail n'existe pas déjà 
             $mail_exist= 'SELECT COUNT(*) FROM users WHERE mail_user = :mail_user';
-            if($mail_exist>=1){
-                return "mail déjà existant";
+            $stmt = $conn->prepare($mail_exist);
+            $stmt->bindParam(':mail_user', $mail_user);
+            $stmt->execute();
+            $resultMail = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            if($resultMail['count']>=1){
+                return "mail-exist";
             }
             else{
                 $stmt->bindParam(':mail_user', $mail_user);
@@ -210,7 +215,7 @@ class User
                 $stmt->execute();
                 $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 $id_usr = User::id_usr($mail_user, $conn);
-                Playlist::creer_playlist("Coup de coeur", $id_usr, $conn); // marche pas à régler
+                Playlist::creer_playlist("Favoris", $id_usr, $conn); // marche pas à régler
             }
         
         }catch (PDOException $exception) {

@@ -34,6 +34,21 @@ class Playlist
         }
         return $result['nom_playlist'];
     }
+    //Récupère l'id de la playlist depuis son nom : 
+    public static function id_pla($nom_playlist, $conn) {
+        try {
+
+            $sql = 'SELECT id_playlist FROM playlist WHERE nom_playlist = :nom_playlist';
+            $stmt = $conn->prepare($sql);
+            $stmt->bindParam(':nom_playlist', $nom_playlist);
+            $stmt->execute();
+            $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        } catch (PDOException $exception) {
+            error_log('Connection error: ' . $exception->getMessage());
+            return false;
+        }
+        return $result['id_playlist'];
+    }
 
     // Récupère la date de modification de la playlist à partir de son id
     public static function date_modif_pla($id_playlist, $conn) {
@@ -70,6 +85,19 @@ class Playlist
         try {
             
             $sql = 'INSERT INTO playlist (nom_playlist, date_creation, id_user, date_modif) VALUES (:nom_playlist, NOW(), :id_user, NOW())';
+            //vérification si la playlist existe déjà :
+            $sqlVerif = 'SELECT COUNT(*) FROM playlist WHERE nom_playlist = :nom_playlist AND id_user = :id_user';
+            $stmtVerif = $conn->prepare($sqlVerif);
+            $stmtVerif->execute();
+            $resultVerif = $stmtVerif->fetchAll(PDO::FETCH_ASSOC);
+            if($resultVerif['count']>=1){
+                return "playlist-exist";
+            }
+            //On vérifie que le nom de la playlist n'est pas "Favoris" ou "favoris" :
+            if($nom_playlist == "Favoris" || $nom_playlist == "favoris"){
+                return "playlist-exist";
+            }
+            //si elle n'existe pas, on l'ajoute :
             $stmt = $conn->prepare($sql);
             $stmt->bindParam(':nom_playlist', $nom_playlist);
             $stmt->bindParam(':id_user', $id_user);
