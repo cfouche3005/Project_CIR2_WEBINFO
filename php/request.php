@@ -92,7 +92,13 @@ echo json_encode($test);
 //$test = Album::info_album('2ecdc503-8f4e-488c-aee2-d35d87916021', $db);
 //echo json_encode($test);
 
+//print_r(json_encode(Playlist::get_music_playlist(1, $db)));
 
+//print_r(json_encode(User::info_usr_by_id(1, $db)));
+
+
+
+//Artist::info_artiste('847f8b9d-b8c5-408f-aa42-ab8fa67d10c5', $db);
 
 
 
@@ -132,7 +138,7 @@ switch ($method){
                 break;
             case '/user/playlists/like':
                 if(isset($_GET['id_music']) && isset($_GET['id_user'])){
-                    $id_music =$_GET['id_music'];
+                    $id_music = $_GET['id_music'];
                     $id_user = $_GET['id_user'];
                     $response = Music::verif_music_like($id_music, $id_user, $db);
                     header('Content-Type: application/json; charset=utf-8');
@@ -144,6 +150,21 @@ switch ($method){
                 else{
                     header('HTTP/1.1 400 Bad Request');
 
+                    exit;
+                }
+                break;
+            case '/user/content/playlist':
+                if(isset($_GET['id_playlist'])){
+                    $id_playlist = $_GET['id_playlist'];
+                    $response = Playlist::get_music_playlist($id_playlist, $db);
+                    header('Content-Type: application/json; charset=utf-8');
+                    header('Cache-control: no-store, no-cache, must-revalidate');
+                    header('Pragma: no-cache');
+                    header('HTTP/1.1 200 OK');
+                    echo json_encode($response);
+                }
+                else{
+                    header('HTTP/1.1 400 Bad Request');
                     exit;
                 }
                 break;
@@ -279,6 +300,43 @@ switch ($method){
                     header('HTTP/1.1 200 OK');
                     echo json_encode($response);
                 }
+                else{
+                    header('HTTP/1.1 400 Bad PUT Request');
+                    exit;
+                }
+                break;
+            case '/user/profile':
+                parse_str(file_get_contents('php://input'), $_PUT);
+                if(isset($_PUT['id_user']) && isset($_PUT['lastname']) && isset($_PUT['surname']) && isset($_PUT['mail']) && isset($_PUT['password']) && isset($_PUT['pseudo']) && isset($_PUT['birthdate']) && isset($_PUT['mp']) && $_PUT['mp'] == 'true'){
+                    $id_user = $_PUT['id_user'];
+                    $lastname = $_PUT['lastname'];
+                    $firstname = $_PUT['surname'];
+                    $mail = $_PUT['mail'];
+                    $password = $_PUT['password'];
+                    $birthdate = $_PUT['birthdate'];
+                    $pseudo = $_PUT['pseudo'];
+                    $response = User::modifier_usr($id_user, $mail, $lastname, $firstname, $birthdate, $password, $pseudo, 'tbd', $db);
+                    header('Content-Type: application/json; charset=utf-8');
+                    header('Cache-control: no-store, no-cache, must-revalidate');
+                    header('Pragma: no-cache');
+                    header('HTTP/1.1 200 OK');
+                    echo json_encode($response);
+                }
+                elseif(isset($_PUT['id_user']) && isset($_PUT['lastname']) && isset($_PUT['surname']) && isset($_PUT['mail']) && isset($_PUT['pseudo']) && isset($_PUT['birthdate']) && isset($_PUT['mp']) && $_PUT['mp'] == 'false'){
+                    $id_user = $_PUT['id_user'];
+                    $lastname = $_PUT['lastname'];
+                    $firstname = $_PUT['surname'];
+                    $mail = $_PUT['mail'];
+                    $birthdate = $_PUT['birthdate'];
+                    $pseudo = $_PUT['pseudo'];
+                    $response = User::modifier_usr($id_user, $mail, $lastname, $firstname, $birthdate, 'tbd', $pseudo, 'tbd', $db);
+                    header('Content-Type: application/json; charset=utf-8');
+                    header('Cache-control: no-store, no-cache, must-revalidate');
+                    header('Pragma: no-cache');
+                    header('HTTP/1.1 200 OK');
+                    echo json_encode($response);
+                }
+
                 else{
                     header('HTTP/1.1 400 Bad PUT Request');
                     exit;
