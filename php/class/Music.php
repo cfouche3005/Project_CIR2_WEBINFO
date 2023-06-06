@@ -208,6 +208,18 @@ class Music
             return false;
         }
     }
+    /*public static function ajout_music_like($id_music, $id_playlist, $conn) {
+        // Vérifier si la combinaison d'ID de musique et d'ID de playlist existe déjà
+        $existingEntry = $conn->query("SELECT COUNT(*) FROM possede WHERE id_music = $id_music AND id_playlist = $id_playlist")->fetchColumn();
+        if ($existingEntry > 0) {
+            echo "Cette musique est déjà présente dans la playlist.";
+            return;
+        }
+
+        // Insérer la nouvelle musique aimée dans la playlist
+        $conn->exec("INSERT INTO possede (id_music, id_playlist) VALUES ($id_music, $id_playlist)");
+        echo "Musique ajoutée avec succès à la playlist.";
+    }*/
 
     //supprime une musique dans les favoris d'un user spécifique
     public static function delete_music_like($id_music, $id_user, $conn){
