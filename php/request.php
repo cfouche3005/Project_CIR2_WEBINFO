@@ -94,6 +94,10 @@ echo json_encode($test);
 
 
 
+//Artist::info_artiste('847f8b9d-b8c5-408f-aa42-ab8fa67d10c5', $db);
+
+
+
 $method = $_SERVER['REQUEST_METHOD'];
 $path = $_SERVER['PATH_INFO'];
 
@@ -145,6 +149,21 @@ switch ($method){
                 else{
                     header('HTTP/1.1 400 Bad Request');
 
+                    exit;
+                }
+                break;
+            case '/user/content/playlist':
+                if(isset($_GET['id_playlist'])){
+                    $id_playlist = $_GET['id_playlist'];
+                    $response = Playlist::get_music_playlist($id_playlist, $db);
+                    header('Content-Type: application/json; charset=utf-8');
+                    header('Cache-control: no-store, no-cache, must-revalidate');
+                    header('Pragma: no-cache');
+                    header('HTTP/1.1 200 OK');
+                    echo json_encode($response);
+                }
+                else{
+                    header('HTTP/1.1 400 Bad Request');
                     exit;
                 }
                 break;
@@ -287,7 +306,7 @@ switch ($method){
                 break;
             case '/user/profile':
                 parse_str(file_get_contents('php://input'), $_PUT);
-                if(isset($_PUT['id_user']) && isset($_PUT['lastname']) && isset($_PUT['surname']) && isset($_PUT['mail']) && isset($_PUT['password']) && isset($_PUT['pseudo']) && isset($_PUT['birthdate']) && isset($_PUT['mp']) && $_PUT['mp'] == true){
+                if(isset($_PUT['id_user']) && isset($_PUT['lastname']) && isset($_PUT['surname']) && isset($_PUT['mail']) && isset($_PUT['password']) && isset($_PUT['pseudo']) && isset($_PUT['birthdate']) && isset($_PUT['mp']) && $_PUT['mp'] == 'true'){
                     $id_user = $_PUT['id_user'];
                     $lastname = $_PUT['lastname'];
                     $firstname = $_PUT['surname'];
@@ -302,7 +321,7 @@ switch ($method){
                     header('HTTP/1.1 200 OK');
                     echo json_encode($response);
                 }
-                elseif(isset($_PUT['id_user']) && isset($_PUT['lastname']) && isset($_PUT['surname']) && isset($_PUT['mail']) && isset($_PUT['pseudo']) && isset($_PUT['birthdate']) && isset($_PUT['mp']) && $_PUT['mp'] == false){
+                elseif(isset($_PUT['id_user']) && isset($_PUT['lastname']) && isset($_PUT['surname']) && isset($_PUT['mail']) && isset($_PUT['pseudo']) && isset($_PUT['birthdate']) && isset($_PUT['mp']) && $_PUT['mp'] == 'false'){
                     $id_user = $_PUT['id_user'];
                     $lastname = $_PUT['lastname'];
                     $firstname = $_PUT['surname'];
