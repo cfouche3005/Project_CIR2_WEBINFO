@@ -121,6 +121,22 @@ switch ($method){
                     exit;
                 }
                 break;
+            case '/content/album/random':
+                if (isset($_GET['numbers'])) {
+                    $numbers = $_GET['numbers'];
+                    $response = Album::album_random($numbers, $db);
+                    header('Content-Type: application/json; charset=utf-8');
+                    header('Cache-control: no-store, no-cache, must-revalidate');
+                    header('Pragma: no-cache');
+                    header('HTTP/1.1 200 OK');
+                    echo json_encode($response);
+                }
+                else{
+                    header('HTTP/1.1 400 Bad Request');
+
+                    exit;
+                }
+                break;
             case '/user/playlists':
                 if(isset($_GET['id_user'])){
                     $id_user = $_GET['id_user'];
@@ -273,6 +289,22 @@ switch ($method){
                 if(isset($_GET['id_playlist'])){
                     $id_playlist = $_GET['id_playlist'];
                     $response = Playlist::delete_playlist($id_playlist, $db);
+                    header('Content-Type: application/json; charset=utf-8');
+                    header('Cache-control: no-store, no-cache, must-revalidate');
+                    header('Pragma: no-cache');
+                    header('HTTP/1.1 200 OK');
+                    echo json_encode($response);
+                }
+                else{
+                    header('HTTP/1.1 400 Bad Request');
+                    exit;
+                }
+                break;
+            case '/user/playlists/delete':
+                if(isset($_GET['id_playlist']) && isset($_GET['id_music'])){
+                    $id_playlist = $_GET['id_playlist'];
+                    $id_music = $_GET['id_music'];
+                    $response = Playlist::delete_music_playlist($id_playlist, $id_music, $db);
                     header('Content-Type: application/json; charset=utf-8');
                     header('Cache-control: no-store, no-cache, must-revalidate');
                     header('Pragma: no-cache');

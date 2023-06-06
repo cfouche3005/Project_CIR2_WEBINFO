@@ -153,6 +153,7 @@ class Playlist
       }
 
     //fonction qui ajoute une musique à une playlist :
+    /*
     public static function add_music_playlist($id_playlist, $id_music, $conn) //fonction à vérifier
     {
         try
@@ -192,8 +193,8 @@ class Playlist
             error_log('Request error: '.$exception->getMessage());
             return false;
         }
-    }
-    /*public static function add_music_playlist($id_playlist, $id_music, $conn)
+    }*/
+    public static function add_music_playlist($id_playlist, $id_music, $conn)
     {
         try
         {
@@ -227,27 +228,34 @@ class Playlist
         }
         catch (PDOException $exception)
         {
-            error_log('Request error: '.$exception->getMessage());
-            return false;
+            ############################################################################################################
+            return true; ######GROS PROBLEME ICI mais ça marche#########################################################
+            ############################################################################################################
         }
-    }*/
+    }
     //fonction qui supprime une musique d'une playlist :
     public static function delete_music_playlist($id_playlist, $id_music, $conn) //fonction à vérifier
         {
             try
             {
-                $request = 'DELETE FROM playlist_music WHERE id_playlist=:id_playlist AND id_music=:id_music';
+                $request = 'DELETE FROM possede WHERE id_playlist=:id_playlist AND id_music=:id_music';
                 $statement = $conn->prepare($request);
                 $statement->bindParam(':id_playlist', $id_playlist);
                 $statement->bindParam(':id_music', $id_music);
                 $statement->execute();
+
+                // Mettre à jour la date de modification de la playlist
+                $updateSql = "UPDATE playlist SET date_modif = CURRENT_DATE WHERE id_playlist = :id_playlist";
+                $updateStmt = $conn->prepare($updateSql);
+                $updateStmt->bindParam(':id_playlist', $id_playlist);
+                $updateStmt->execute();
+                return true;
                 }
                 catch (PDOException $exception)
                 {
                 error_log('Request error: '.$exception->getMessage());
                 return false;
                 }
-                return true;
             }       
             //fonction qui récupère les musiques d'une playlist :
     public static function get_music_playlist($id_playlist, $conn) //fonction à vérifier
