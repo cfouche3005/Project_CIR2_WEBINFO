@@ -157,21 +157,20 @@ class Music
     //vérifie si une musique est dans les favoris d'un user spécifique
     public static function verif_music_like($id_music, $id_user, $conn){
         try {
-            $sql = 'SELECT COUNT(*) FROM possede p
-                INNER JOIN playlist pl ON p.id_playlist = pl.id_playlist 
-                WHERE pl.nom_playlist = :nom_playlist 
+            $sql = "SELECT COUNT(*) FROM possede p
+                JOIN playlist pl ON p.id_playlist = pl.id_playlist 
+                WHERE pl.nom_playlist = 'Favoris' 
                 AND p.id_music = :id_music
-                AND pl.id_user = :id_user';
+                AND pl.id_user = :id_user";
             $stmt = $conn->prepare($sql);
-            $stmt->bindParam(':nom_playlist', 'Favoris');
             $stmt->bindParam(':id_music', $id_music);
             $stmt->bindParam(':id_user', $id_user);
             $stmt->execute();
             $result = $stmt->fetch(PDO::FETCH_ASSOC);
-            if($result['count']>=1){
+            if($result['count']==1){
                 return true;
             }
-            else return false;
+            else return "not found";
         } catch (PDOException $exception) {
             error_log('Connection error: ' . $exception->getMessage());
             return false;
@@ -181,22 +180,28 @@ class Music
     //ajoute une musique dans les favoris d'un user spécifique
     public static function ajout_music_like($id_music, $id_user, $conn){
         try {
-            $sql = 'INSERT INTO possede (id_music, id_playlist) VALUES (:id_music, (SELECT id_playlist FROM playlist WHERE nom_playlist = :nom_playlist AND id_user = :id_user))';
+
+            $sql = "INSERT INTO possede (id_music, id_playlist)
+                VALUES (:id_music, (
+                    SELECT id_playlist
+                    FROM playlist
+                    WHERE nom_playlist = 'Favoris' AND id_user = :id_user
+                        )
+                    )";
             $stmt = $conn->prepare($sql);
-            $stmt->bindParam(':nom_playlist', 'Favoris');
             $stmt->bindParam(':id_music', $id_music);
             $stmt->bindParam(':id_user', $id_user);
             $stmt->execute();
 
-            $updateSql = 'UPDATE playlist 
+
+
+            $updateSql = "UPDATE playlist 
                       SET date_modif = CURRENT_DATE 
-                      WHERE nom_playlist = :nom_playlist 
-                      AND id_user = :id_user';
+                      WHERE nom_playlist = 'Favoris' 
+                      AND id_user = :id_user";
             $updateStmt = $conn->prepare($updateSql);
-            $updateStmt->bindParam(':nom_playlist', 'Favoris');
             $updateStmt->bindParam(':id_user', $id_user);
             $updateStmt->execute();
-
             return true;
         } catch (PDOException $exception) {
             error_log('Connection error: ' . $exception->getMessage());
@@ -207,19 +212,17 @@ class Music
     //supprime une musique dans les favoris d'un user spécifique
     public static function delete_music_like($id_music, $id_user, $conn){
         try {
-            $sql = 'DELETE FROM possede WHERE id_music = :id_music AND id_playlist = (SELECT id_playlist FROM playlist WHERE nom_playlist = :nom_playlist AND id_user = :id_user)';
+            $sql = "DELETE FROM possede WHERE id_music = :id_music AND id_playlist = (SELECT id_playlist FROM playlist WHERE nom_playlist = 'Favoris' AND id_user = :id_user)";
             $stmt = $conn->prepare($sql);
-            $stmt->bindParam(':nom_playlist', 'Favoris');
             $stmt->bindParam(':id_music', $id_music);
             $stmt->bindParam(':id_user', $id_user);
             $stmt->execute();
 
-            $updateSql = 'UPDATE playlist 
+            $updateSql = "UPDATE playlist 
                       SET date_modif = CURRENT_DATE 
-                      WHERE nom_playlist = :nom_playlist 
-                      AND id_user = :id_user';
+                      WHERE nom_playlist = 'Favoris' 
+                      AND id_user = :id_user";
             $updateStmt = $conn->prepare($updateSql);
-            $updateStmt->bindParam(':nom_playlist', 'Favoris');
             $updateStmt->bindParam(':id_user', $id_user);
             $updateStmt->execute();
             return true;

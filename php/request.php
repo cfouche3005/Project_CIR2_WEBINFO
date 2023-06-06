@@ -78,6 +78,11 @@ $request = explode('/', $request);
 $requestRessource = array_shift($request);
 */
 
+//Music::ajout_music_like("469214a3-21d0-4b76-9fd4-87bec7772789", 1, $db);
+//$test = Music::info_pla($db);
+//print_r(json_encode($test));
+//echo tt;
+
 $method = $_SERVER['REQUEST_METHOD'];
 $path = $_SERVER['PATH_INFO'];
 /*
@@ -127,7 +132,7 @@ switch ($method){
                 break;
             case '/user/playlists/like':
                 if(isset($_GET['id_music']) && isset($_GET['id_user'])){
-                    $id_music = $_GET['id_music'];
+                    $id_music =$_GET['id_music'];
                     $id_user = $_GET['id_user'];
                     $response = Music::verif_music_like($id_music, $id_user, $db);
                     header('Content-Type: application/json; charset=utf-8');
@@ -240,11 +245,11 @@ switch ($method){
                     exit;
                 }
                 break;
-            case '/user/playlist/like':
+            case '/user/playlists/like':
                 if(isset($_GET['id_music']) && isset($_GET['id_user'])){
                     $id_music = $_GET['id_music'];
                     $id_user = $_GET['id_user'];
-                    $response = Music::ajout_music_like($id_music, $id_user, $db);
+                    $response = Music::delete_music_like($id_music, $id_user, $db);
                     header('Content-Type: application/json; charset=utf-8');
                     header('Cache-control: no-store, no-cache, must-revalidate');
                     header('Pragma: no-cache');
