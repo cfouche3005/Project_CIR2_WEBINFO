@@ -243,11 +243,13 @@ class User
             $stmt->bindParam(':id_user', $id_user);
             $stmt->execute();
             $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            return true;
         } catch (PDOException $exception) {
             error_log('Connection error: ' . $exception->getMessage());
             return false;
         }
     }
+
     public static function modifier_usr_sans_mdp($id_user, $mail_user, $nom_user, $prenom_user, $date_naissance, $pseudo_user, $conn) {
         try {
             
@@ -264,11 +266,13 @@ class User
             $stmt->bindParam(':id_user', $id_user);
             $stmt->execute();
             $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            return true;
         } catch (PDOException $exception) {
             error_log('Connection error: ' . $exception->getMessage());
             return false;
         }
     }
+
     public static function delete_usr($id_user, $conn)
     {
         try
@@ -306,4 +310,54 @@ class User
             return $id_playlist;
       
       }
+
+    public static function usr_aime_album($id_user, $id_album, $conn) {
+        try {
+            $sql = 'INSERT INTO aime_album (id_album, id_user) VALUES (:id_album, :id_user)';
+            $stmt = $conn->prepare($sql);
+            $stmt->bindParam(':id_album', $id_album);
+            $stmt->bindParam(':id_user', $id_user);
+            $stmt->execute();
+            $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            return true;
+        } catch (PDOException $exception) {
+            error_log('Connection error: ' . $exception->getMessage());
+            return false;
+        }
+    }
+
+    public static function usr_aime_album_verif($id_user, $id_album, $conn) {
+        try {
+            $sql= 'SELECT COUNT(*) FROM aime_album WHERE id_user = :id_user AND id_album = :id_album';
+            $stmt = $conn->prepare($sql);
+            $stmt->bindParam(':id_album', $id_album);
+            $stmt->bindParam(':id_user', $id_user);
+            $stmt->execute();
+            $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            if ($result['count']>=1){
+                return true;
+            }
+            else {
+                return false;
+            }
+        } catch (PDOException $exception) {
+            error_log('Connection error: ' . $exception->getMessage());
+            return false;
+        }
+    }
+
+    public static function usr_aime_album_delete($id_user, $id_album, $conn) {
+        try {
+            $sql = 'DELETE FROM aime_album WHERE id_album = :id_album AND id_user = :id_user';
+            $stmt = $conn->prepare($sql);
+            $stmt->bindParam(':id_album', $id_album);
+            $stmt->bindParam(':id_user', $id_user);
+            $stmt->execute();
+            $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            return true;
+        } catch (PDOException $exception) {
+            error_log('Connection error: ' . $exception->getMessage());
+            return false;
+        }
+    }
 }
