@@ -226,6 +226,24 @@ switch ($method){
                     exit;
                 }
                 break;
+
+            case '/user/playlists/add':
+                if(isset($_POST['id_playlist']) && isset($_POST['id_music'])){
+
+                    $id_playlist = $_POST['id_playlist'];
+                    $id_music = $_POST['id_music'];
+                    $response = Playlist::add_music_playlist($id_playlist, $id_music, $db);
+                    header('Content-Type: application/json; charset=utf-8');
+                    header('Cache-control: no-store, no-cache, must-revalidate');
+                    header('Pragma: no-cache');
+                    header('HTTP/1.1 200 OK');
+                    echo json_encode($response);
+                }
+                else{
+                    header('HTTP/1.1 400 Bad Request');
+                    exit;
+                }
+                break;
             case '/user/playlists/like':
                 if(isset($_POST['id_music']) && isset($_POST['id_user'])){
                     $id_music = $_POST['id_music'];

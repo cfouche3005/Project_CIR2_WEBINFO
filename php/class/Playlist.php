@@ -151,23 +151,69 @@ class Playlist
         }
         return true;
       }
+
     //fonction qui ajoute une musique à une playlist :
-    public static function add_music_playlist($id_playlist, $id_music, $conn) //fonciton à vérifier
+    /*public static function add_music_playlist($id_playlist, $id_music, $conn) //fonction à vérifier
     {
         try
         {
-            $sql = 'INSERT INTO playlist_music (id_playlist, id_music, date_modif) VALUES (:id_playlist, :id_music, NOW())';
+            $sql = 'INSERT INTO possede (id_playlist, id_music) VALUES (:id_playlist, :id_music)';
             $statement = $conn->prepare($sql);
             $statement->bindParam(':id_playlist', $id_playlist);
             $statement->bindParam(':id_music', $id_music);
             $statement->execute();
+
+            $updateSql = "UPDATE playlist
+                      SET date_modif = CURRENT_DATE 
+                      WHERE id_playlist = :id_playlist";
+            $updateStmt = $conn->prepare($updateSql);
+            $updateStmt->bindParam(':id_playlist', $id_playlist);
+            $updateStmt->execute();
+            return true;
         }
         catch (PDOException $exception)
         {
             error_log('Request error: '.$exception->getMessage());
             return false;
         }
-        return true;
+    }*/
+    public static function add_music_playlist($id_playlist, $id_music, $conn)
+    {
+        try
+        {
+            // Vérifier si la combinaison id_music/id_playlist existe déjà
+            $checkSql = 'SELECT COUNT(*) FROM possede WHERE id_playlist = :id_playlist AND id_music = :id_music';
+            $checkStmt = $conn->prepare($checkSql);
+            $checkStmt->bindParam(':id_playlist', $id_playlist);
+            $checkStmt->bindParam(':id_music', $id_music);
+            $checkStmt->execute();
+            $count = $checkStmt->fetchColumn();
+
+            if ($count > 0) {
+                // La combinaison id_music/id_playlist existe déjà, renvoyer une erreur ou un message approprié
+                return false;
+            }
+
+            // Effectuer l'insertion
+            $sql = 'INSERT INTO possede (id_playlist, id_music) VALUES (:id_playlist, :id_music)';
+            $statement = $conn->prepare($sql);
+            $statement->bindParam(':id_playlist', $id_playlist);
+            $statement->bindParam(':id_music', $id_music);
+            $statement->execute();
+
+            // Mettre à jour la date de modification de la playlist
+            $updateSql = "UPDATE playlist SET date_modif = CURRENT_DATE WHERE id_playlist = :id_playlist";
+            $updateStmt = $conn->prepare($updateSql);
+            $updateStmt->bindParam(':id_playlist', $id_playlist);
+            $updateStmt->execute();
+
+            return true;
+        }
+        catch (PDOException $exception)
+        {
+            error_log('Request error: '.$exception->getMessage());
+            return false;
+        }
     }
     //fonction qui supprime une musique d'une playlist :
     public static function delete_music_playlist($id_playlist, $id_music, $conn) //fonction à vérifier
