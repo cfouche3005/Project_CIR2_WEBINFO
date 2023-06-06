@@ -88,10 +88,12 @@ class Album
             //requete sql qui selectionne le nom de toutes les musiques d'un album ainsi que les infos de l'album
             //$sql = 'SELECT nom_album, date_album, image_album from music m JOIN contient c ON c.id_music=m.id_music JOIN album a ON a.id_album=c.id_album JOIN type_album t ON t.type_album_val=a.type_album_val WHERE a.id_album = :id_album';
             //$sql2= 'SELECT id_music, lien_music, title_music, time_music, place_album FROM music m JOIN contient c ON c.id_music=m.id_music JOIN album a ON a.id_album=c.id_album JOIN type_album t ON t.type_album_val=a.type_album_val WHERE a.id_album = :id_album ORDER BY place_album';
-            $sqlAlbum = 'SELECT id_album, nom_album, date_album, image_album, type_album_val from album WHERE id_album = :id_album';
+            //$sqlAlbum = 'SELECT id_album, nom_album, date_album, image_album, type_album_val from album WHERE id_album = :id_album';
+            $sqlAlbum= 'SELECT album.id_album, nom_album, date_album, image_album, type_album_val,a.id_artist,a.pseudo_artist from album JOIN compose_album ca on album.id_album = ca.id_album JOIN artist a on a.id_artist = ca.id_artist WHERE album.id_album = :id_album';
             $sqlMusic= 'SELECT c.id_music, lien_music, title_music, time_music, place_album FROM music m JOIN contient c on c.id_music=m.id_music JOIN album a ON a.id_album=c.id_album WHERE a.id_album = :id_album ORDER BY place_album';
             //$sql4= 'SELECT * from artist a JOIN compose_album ca ON a.id_artist = ca.id_artist JOIN album al ON al.id_album = ca.id_album WHERE al.id_album = :id_album';
             $sqlArtist='SELECT a.id_artist,pseudo_artist FROM artist a JOIN compose_music cm on a.id_artist = cm.id_artist WHERE cm.id_music = :id_music';
+            //$sql6='select * from music m join contient c on c.id_music=m.id_music JOIN album a ON a.id_album=c.id_album JOIN type_album t ON t.type_album_val=a.type_album_val';
             $stmt = $conn->prepare($sqlAlbum);
             $stmt->bindParam(':id_album', $id_album);
             $stmt->execute();
@@ -108,9 +110,9 @@ class Album
                 $stmt2 = $conn->prepare($sqlArtist);
                 $stmt2->bindParam(':id_music', $music['id_music']);
                 $stmt2->execute();
-                $resultRien = $stmt2->fetchAll(PDO::FETCH_ASSOC);
-                // $resultMusic[$music]['artist']=$resultRien;
-                $music['artists']=$resultRien;
+                $resultArtist = $stmt2->fetchAll(PDO::FETCH_ASSOC);
+                // $resultMusic[$music]['artist']=$resultArtist;
+                $music['artists']=$resultArtist;
                 array_push($Endresult,$music);
             }
 
