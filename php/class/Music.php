@@ -153,6 +153,4 @@ class Music
         }
         return $result;
     }
-    
-   
 }
