@@ -153,22 +153,38 @@ class Playlist
       }
 
     //fonction qui ajoute une musique à une playlist :
-    /*public static function add_music_playlist($id_playlist, $id_music, $conn) //fonction à vérifier
+    public static function add_music_playlist($id_playlist, $id_music, $conn) //fonction à vérifier
     {
         try
         {
+            //$test = 1;
+
+
             $sql = 'INSERT INTO possede (id_playlist, id_music) VALUES (:id_playlist, :id_music)';
             $statement = $conn->prepare($sql);
             $statement->bindParam(':id_playlist', $id_playlist);
             $statement->bindParam(':id_music', $id_music);
             $statement->execute();
 
-            $updateSql = "UPDATE playlist
+            $checkSql = 'SELECT COUNT(*) FROM possede WHERE id_playlist = :id_playlist AND id_music = :id_music';
+            $checkStmt = $conn->prepare($checkSql);
+            $checkStmt->bindParam(':id_playlist', $id_playlist);
+            $checkStmt->bindParam(':id_music', $id_music);
+            $checkStmt->execute();
+            $count = $checkStmt->fetchColumn();
+
+            if ($count == 1) {
+                // La combinaison id_music/id_playlist existe déjà, renvoyer une erreur ou un message approprié
+                $updateSql = "UPDATE playlist
                       SET date_modif = CURRENT_DATE 
                       WHERE id_playlist = :id_playlist";
-            $updateStmt = $conn->prepare($updateSql);
-            $updateStmt->bindParam(':id_playlist', $id_playlist);
-            $updateStmt->execute();
+                $updateStmt = $conn->prepare($updateSql);
+                $updateStmt->bindParam(':id_playlist', $id_playlist);
+                $updateStmt->execute();
+                return true;
+            }
+            //error_log($test);
+            //$test = $test +1;
             return true;
         }
         catch (PDOException $exception)
@@ -176,8 +192,8 @@ class Playlist
             error_log('Request error: '.$exception->getMessage());
             return false;
         }
-    }*/
-    public static function add_music_playlist($id_playlist, $id_music, $conn)
+    }
+    /*public static function add_music_playlist($id_playlist, $id_music, $conn)
     {
         try
         {
@@ -214,7 +230,7 @@ class Playlist
             error_log('Request error: '.$exception->getMessage());
             return false;
         }
-    }
+    }*/
     //fonction qui supprime une musique d'une playlist :
     public static function delete_music_playlist($id_playlist, $id_music, $conn) //fonction à vérifier
         {
