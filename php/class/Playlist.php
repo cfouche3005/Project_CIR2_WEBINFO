@@ -114,5 +114,19 @@ class Playlist
         }
         return true;
       }
-    
+
+    // Récupère les playlists d'un user
+    public static function playlist_user($id_user, $conn) {
+        try {
+            $sql = 'SELECT id_playlist, nom_playlist, date_modif FROM Playlist WHERE id_user = :id_user';
+            $stmt = $conn->prepare($sql);
+            $stmt->bindParam(':id_user', $id_user);
+            $stmt->execute();
+            $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        } catch (PDOException $exception) {
+            error_log('Connection error: ' . $exception->getMessage());
+            return false;
+        }
+        return $result;
+    }
 }

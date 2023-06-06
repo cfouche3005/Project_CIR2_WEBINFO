@@ -122,16 +122,50 @@ class Album
             $fresult['album']=$resultAlbum;
             $fresult['musics']=$Endresult;
             return $fresult;
-
-         
-
-            
-
-
         } catch (PDOException $exception) {
             error_log('Connection error: ' . $exception->getMessage());
             return false;
         }
-        
+    }
+
+    // Récupère les albums d'un user
+    public static function album_user($id_user, $conn) {
+        try {
+
+            $sql = 'SELECT album.id_album, nom_album, date_album, image_album, type_album_val,a.id_artist,a.pseudo_artist 
+                FROM album 
+                JOIN compose_album ca ON album.id_album = ca.id_album 
+                JOIN artist a ON a.id_artist = ca.id_artist 
+                JOIN aime_album aa ON album.id_album = aa.id_album 
+                JOIN users u ON u.id_user = aa.id_user 
+                WHERE album.id_album = :id_album';
+            $stmt = $conn->prepare($sql);
+            $stmt->bindParam(':id_user', $id_user);
+            $stmt->execute();
+            $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        } catch (PDOException $exception) {
+            error_log('Connection error: ' . $exception->getMessage());
+            return false;
+        }
+        return $result;
+    }
+
+    // Récupère les albums d'un user
+    public static function album_random($conn) {
+        try {
+
+            $sql = 'SELECT a.id_album, a.nom_album, a.image_album, ca.id_artist, ar.pseudo_artist 
+                FROM album a 
+                JOIN compose_album ca ON a.id_album=ca.id_album 
+                JOIN artist ar ON ar.id_artist=ca.id_artist 
+                ORDER BY RANDOM() LIMIT 5';
+            $stmt = $conn->prepare($sql);
+            $stmt->execute();
+            $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        } catch (PDOException $exception) {
+            error_log('Connection error: ' . $exception->getMessage());
+            return false;
+        }
+        return $result;
     }
 }
