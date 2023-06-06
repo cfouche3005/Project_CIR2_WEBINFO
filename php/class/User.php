@@ -215,8 +215,11 @@ class User
                 $stmt->bindParam(':photo_user', $photo_user);
                 $stmt->execute();
                 $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
-                $id_usr = User::id_usr($mail_user, $conn);
-                Playlist::creer_playlist("Favoris", $id_usr, $conn); // marche pas à régler
+                //On crée une playlist Favoris pour l'utilisateur à l'aide de la fonction creer_playlist de la classe Playlist :
+                //on commence par récupérer l'id de l'utilisateur :
+                $id_user = User::id_usr($mail_user, $conn);
+                //on crée la playlist Favoris :
+                Playlist::creer_playlist("Favoris", $id_user, $conn);
             }
         
         }catch (PDOException $exception) {
