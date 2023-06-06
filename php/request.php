@@ -122,6 +122,23 @@ switch ($method){
                     exit;
                 }
                 break;
+            case '/user/playlists/like':
+                if(isset($_GET['id_music']) && isset($_GET['id_user'])){
+                    $id_music = $_GET['id_music'];
+                    $id_user = $_GET['id_user'];
+                    $response = Music::verif_music_like($id_music, $id_user, $db);
+                    header('Content-Type: application/json; charset=utf-8');
+                    header('Cache-control: no-store, no-cache, must-revalidate');
+                    header('Pragma: no-cache');
+                    header('HTTP/1.1 200 OK');
+                    echo json_encode($response);
+                }
+                else{
+                    header('HTTP/1.1 400 Bad Request');
+
+                    exit;
+                }
+                break;
         }
         break;
         
@@ -141,7 +158,6 @@ switch ($method){
                     header('Pragma: no-cache');
                     header('HTTP/1.1 200 OK');
                     echo json_encode($response);
-                    
                 }
                 else{
                     header('HTTP/1.1 400 Bad Request');
@@ -181,7 +197,23 @@ switch ($method){
                     exit;
                 }
                 break;
+            case '/user/playlists/like':
+                if(isset($_POST['id_music']) && isset($_POST['id_user'])){
+                    $id_music = $_POST['id_music'];
+                    $id_user = $_POST['id_user'];
+                    $response = Music::ajout_music_like($id_music, $id_user, $db);
+                    header('Content-Type: application/json; charset=utf-8');
+                    header('Cache-control: no-store, no-cache, must-revalidate');
+                    header('Pragma: no-cache');
+                    header('HTTP/1.1 200 OK');
+                    echo json_encode($response);
+                }
+                else{
+                    header('HTTP/1.1 400 Bad Request');
 
+                    exit;
+                }
+                break;
             default :
                 header('HTTP/1.1 400 Bad Request');
                 exit;
@@ -202,6 +234,23 @@ switch ($method){
                 }
                 else{
                     header('HTTP/1.1 400 Bad Request');
+                    exit;
+                }
+                break;
+            case '/user/playlist/like':
+                if(isset($_GET['id_music']) && isset($_GET['id_user'])){
+                    $id_music = $_GET['id_music'];
+                    $id_user = $_GET['id_user'];
+                    $response = Music::ajout_music_like($id_music, $id_user, $db);
+                    header('Content-Type: application/json; charset=utf-8');
+                    header('Cache-control: no-store, no-cache, must-revalidate');
+                    header('Pragma: no-cache');
+                    header('HTTP/1.1 200 OK');
+                    echo json_encode($response);
+                }
+                else{
+                    header('HTTP/1.1 400 Bad Request');
+
                     exit;
                 }
                 break;
