@@ -83,7 +83,7 @@ class Playlist
     }
     public static function creer_playlist($nom_playlist, $id_user, $conn) {
         try {
-            $sql = 'INSERT INTO playlist (nom_playlist, date_creation, id_user, date_modif) VALUES (:nom_playlist, NOW(), :id_user, NOW())';
+            
             //vérification si la playlist existe déjà :
             $sqlVerif = 'SELECT COUNT(*) FROM playlist WHERE nom_playlist = :nom_playlist AND id_user = :id_user';
             $stmtVerif = $conn->prepare($sqlVerif);
@@ -92,25 +92,32 @@ class Playlist
             $stmtVerif->execute();
             $resultVerif = $stmtVerif->fetch(PDO::FETCH_ASSOC);
             
-            if($resultVerif['count']>=1){
+            if($resultVerif['count']==0){
+                if ($nom_playlist == "Favoris" || $nom_playlist == "favoris"){
+                    return "playlist-exist";
+                }
+                else{
+                    //si elle n'existe pas, on l'ajoute :
+                    $sql = 'INSERT INTO playlist (nom_playlist, date_creation, id_user, date_modif) VALUES (:nom_playlist, NOW(), :id_user, NOW())';
+                    $stmt = $conn->prepare($sql);
+                    $stmt->bindParam(':nom_playlist', $nom_playlist);
+                    $stmt->bindParam(':id_user', $id_user);
+                    $stmt->execute();
+                    //$result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                    return true;
+                }
+            }
+            else {
                 return "playlist-exist";
             }
-            //On vérifie que le nom de la playlist n'est pas "Favoris" ou "favoris" :
-            if($nom_playlist == "Favoris" || $nom_playlist == "favoris"){
-                return "playlist-exist";
-            }
-            //si elle n'existe pas, on l'ajoute :
-            $stmt = $conn->prepare($sql);
-            $stmt->bindParam(':nom_playlist', $nom_playlist);
-            $stmt->bindParam(':id_user', $id_user);
-            $stmt->execute();
-            $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            
+            
         } catch (PDOException $exception) {
             error_log('Connection error: ' . $exception->getMessage());
             return false;
             
         }
-        return true;
+        
     }
     public static function modifier_playlist($nom_playlist, $id_playlist, $conn) {
         try {

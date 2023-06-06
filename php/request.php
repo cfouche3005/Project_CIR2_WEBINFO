@@ -40,8 +40,8 @@ $test = Playlist::info_pla($db);
 print_r(json_encode($test));
 */
 
-
-/*User::ajout_usr("leautrddeprojet453@gmail.com", "autre", "prenom", "1998-05-16", "unmdpprojet", "or", "photo9",  $db);
+/*
+User::ajout_usr("addmail@gmail.com", "autre", "penelope", "1998-05-16", "unmdpprojet", "or", "photo9",  $db);
 $test = User::info_usr($db);
 print_r(json_encode($test));*/
 
@@ -86,6 +86,9 @@ echo json_encode($test);
 */
 //$test = Album::info_album('2ecdc503-8f4e-488c-aee2-d35d87916021', $db);
 //echo json_encode($test);
+
+
+
 
 
 switch ($method){
@@ -279,4 +282,5 @@ switch ($method){
         }
         break;
 }
+
 ?>
