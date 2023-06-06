@@ -3,7 +3,7 @@
 class Artist
 {
     // Récupère les infos de tous les artistes
-    public static function info_art($conn) {
+    public static function all_art($conn) {
         try {
             
             if($conn){
@@ -97,5 +97,42 @@ class Artist
             return false;
         }
         return $result['photo_artist'];
+    }
+    //fonction qui récupère les informations de l'artiste, les albums dans lequel il est ainsi que 6 musiques produites par l'artiste :
+    public static function info_artiste($id_artist, $conn) {
+        try {
+
+            //requete qui n'affichait qu'une seule musique, à vérifier si c'est toujours le cas
+            $sqlMusic = 'SELECT title_music from music m join compose_music cm on m.id_music=cm.id_music join artist a on cm.id_artist=a.id_artist where a.id_artist=:id_artist limit 6';
+            
+            //requete théorique mais surement fonctionnelle
+            $sqlAlbum = 'SELECT * from album a join compose_album ca on a.id_album=ca.id_album join artist ar on ca.id_artist=ar.id_artist where ar.id_artist=:id_artist';
+            $stmt = $conn->prepare($sqlAlbum);
+            $stmt->bindParam(':id_artist', $id_artist);
+            $stmt->execute();
+            $resultAlbum = $stmt->fetchAll(PDO::FETCH_ASSOC);
+           // requete pour récupérer les informations de l'artist --> fonctionnelle
+            $sqlArtist = 'SELECT * from artist where id_artist=:id_artist';
+            $stmt1 = $conn->prepare($sqlArtist);
+            $stmt1->bindParam(':id_artist', $id_artist);
+            $stmt1->execute();
+            $resultArtist = $stmt1->fetchAll(PDO::FETCH_ASSOC);
+            
+            $EndResult = array();
+            foreach ($resultAlbum as $album) //potentielles erreurs dans le foreach mais normalement ça devrait marcher
+            {
+                $stmt2 = $conn->prepare($sqlMusic);
+                $stmt2->bindParam(':id_album', $album['id_album']);
+                $stmt2->execute();
+                $resultMusic = $stmt2->fetchAll(PDO::FETCH_ASSOC);
+                $album['musics']=$resultMusic; //potentielle erreur
+                array_push($Endresult,$album);
+            }
+           
+        } catch (PDOException $exception) {
+            error_log('Connection error: ' . $exception->getMessage());
+            return false;
+        }
+        return $result;
     }
 }
