@@ -150,18 +150,19 @@ class Album
         return $result;
     }
 
-    // Récupère les albums d'un user
-    public static function album_random($conn) {
+    // Récupère 5 albums random
+    public static function album_random($numbers, $conn) {
         try {
 
             $sql = 'SELECT a.id_album, a.nom_album, a.image_album, ca.id_artist, ar.pseudo_artist 
                 FROM album a 
                 JOIN compose_album ca ON a.id_album=ca.id_album 
                 JOIN artist ar ON ar.id_artist=ca.id_artist 
-                ORDER BY RANDOM() LIMIT 5';
+                ORDER BY RANDOM() LIMIT :numbers';
             $stmt = $conn->prepare($sql);
+            $stmt->bindParam(':numbers', $numbers);
             $stmt->execute();
-            $result = $stmt->fetch(PDO::FETCH_ASSOC);
+            $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
         } catch (PDOException $exception) {
             error_log('Connection error: ' . $exception->getMessage());
             return false;

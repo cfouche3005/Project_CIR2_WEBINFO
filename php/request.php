@@ -6,7 +6,7 @@ require_once('class/Album.php');
 require_once('class/Music.php');
 require_once('class/Artist.php');
 require_once('class/Playlist.php');
-require_once('class/User.php');
+require_once('class/Users.php');
 
 /*function print_array($array) {
     print("<pre>" . print_r($array, true) . "</pre>");
@@ -21,11 +21,11 @@ $info_al = Album::info_alb($db);
 $info_mu = Music::info_mus($db);
 $info_ar = Artist::info_art($db);
 $info_pl = Playlist::info_pla($db);
-$info_us = User::info_usr($db);
+$info_us = Users::info_usr($db);
 #print_array($info_al);
 */
 /*
-$mail= User::mail_usr(1, $db);
+$mail= Users::mail_usr(1, $db);
 print_r(json_encode($mail));
 */
 
@@ -41,15 +41,13 @@ print_r(json_encode($test));
 */
 
 /*
-User::ajout_usr("addmail@gmail.com", "autre", "penelope", "1998-05-16", "unmdpprojet", "or", "photo9",  $db);
-$test = User::info_usr($db);
-print_r(json_encode($test));
-*/
-//print_r(json_encode(User::modifier_usr_sans_mdp(2, "autremail8@gmail.com", "autre", "penelope", "1998-05-16", "or",  $db)));
+Users::ajout_usr("addmail@gmail.com", "autre", "penelope", "1998-05-16", "unmdpprojet", "or", "photo9",  $db);
+$test = Users::info_usr($db);
+print_r(json_encode($test));*/
 
 
 /*
-print_r(User::id_usr("leautrddeprojet@gmail.com", $db));
+print_r(Users::id_usr("leautrddeprojet@gmail.com", $db));
 */
 
 /*
@@ -58,8 +56,8 @@ $test = Playlist::info_pla($db);
 print_r(json_encode($test));
 */
 /*
-User::modifier_usr(1, "cfouche@gmail.com", "c", "fouche", "2003-08-12", "123", "FC-fou", $db);
-$test = User::info_usr($db);
+Users::modifier_usr(1, "cfouche@gmail.com", "c", "fouche", "2003-08-12", "123", "FC-fou", $db);
+$test = Users::info_usr($db);
 print_r(json_encode($test));
 */
 /*
@@ -68,8 +66,8 @@ $test = Playlist::info_pla($db);
 print_r(json_encode($test));
 */
 /*
-User::delete_usr(3, $db);
-$test = User::info_usr($db);
+Users::delete_usr(3, $db);
+$test = Users::info_usr($db);
 print_r(json_encode($test));
 */
 /*
@@ -80,7 +78,13 @@ $request = explode('/', $request);
 $requestRessource = array_shift($request);
 */
 
+//Music::ajout_music_like("469214a3-21d0-4b76-9fd4-87bec7772789", 1, $db);
+//$test = Music::info_pla($db);
+//print_r(json_encode($test));
+//echo tt;
 
+$method = $_SERVER['REQUEST_METHOD'];
+$path = $_SERVER['PATH_INFO'];
 /*
 $test=Album::info_album('2ecdc503-8f4e-488c-aee2-d35d87916021', $db);
 echo json_encode($test);
@@ -90,16 +94,13 @@ echo json_encode($test);
 
 //print_r(json_encode(Playlist::get_music_playlist(1, $db)));
 
-//print_r(json_encode(User::info_usr_by_id(1, $db)));
+//print_r(json_encode(Users::info_usr_by_id(1, $db)));
 
 
 
 //Artist::info_artiste('847f8b9d-b8c5-408f-aa42-ab8fa67d10c5', $db);
 
 
-
-$method = $_SERVER['REQUEST_METHOD'];
-$path = $_SERVER['PATH_INFO'];
 
 switch ($method){
     case 'GET':
@@ -117,6 +118,22 @@ switch ($method){
                 else{
                     header('HTTP/1.1 400 Bad Request');
                     
+                    exit;
+                }
+                break;
+            case '/content/album/random':
+                if (isset($_GET['numbers'])) {
+                    $numbers = $_GET['numbers'];
+                    $response = Album::album_random($numbers, $db);
+                    header('Content-Type: application/json; charset=utf-8');
+                    header('Cache-control: no-store, no-cache, must-revalidate');
+                    header('Pragma: no-cache');
+                    header('HTTP/1.1 200 OK');
+                    echo json_encode($response);
+                }
+                else{
+                    header('HTTP/1.1 400 Bad Request');
+
                     exit;
                 }
                 break;
@@ -167,6 +184,22 @@ switch ($method){
                     exit;
                 }
                 break;
+            case '/user/album/like':
+                if(isset($_GET['id_user']) && isset($_GET['id_album'])){
+                    $id_user = $_GET['id_user'];
+                    $id_album = $_GET['id_album'];
+                    $response = Users::usr_aime_album_verif($id_user, $id_album, $db);
+                    header('Content-Type: application/json; charset=utf-8');
+                    header('Cache-control: no-store, no-cache, must-revalidate');
+                    header('Pragma: no-cache');
+                    header('HTTP/1.1 200 OK');
+                    echo json_encode($response);
+                }
+                else{
+                    header('HTTP/1.1 400 Bad Request');
+                    exit;
+                }
+                break;
         }
         break;
         
@@ -180,7 +213,7 @@ switch ($method){
                     $password = $_POST['password'];
                     $birthdate = $_POST['birthdate'];
                     $pseudo = $_POST['pseudo'];
-                    $response = User::ajout_usr($mail, $lastname, $firstname, $birthdate, $password, $pseudo, 'tbd', $db);
+                    $response = Users::ajout_usr($mail, $lastname, $firstname, $birthdate, $password, $pseudo, 'tbd', $db);
                     header('Content-Type: application/json; charset=utf-8');
                     header('Cache-control: no-store, no-cache, must-revalidate');
                     header('Pragma: no-cache');
@@ -197,7 +230,7 @@ switch ($method){
                 if(isset($_POST['mail']) && isset($_POST['password'])){
                     $mail = $_POST['mail'];
                     $password = $_POST['password'];
-                    $response = User::login_usr($mail, $password, $db);
+                    $response = Users::login_usr($mail, $password, $db);
                     header('Content-Type: application/json; charset=utf-8');
                     header('Cache-control: no-store, no-cache, must-revalidate');
                     header('Pragma: no-cache');
@@ -214,6 +247,24 @@ switch ($method){
                     $id_user = $_POST['id_user'];
                     $nom_playlist = $_POST['nom_playlist'];
                     $response = Playlist::creer_playlist($nom_playlist, $id_user, $db);
+                    header('Content-Type: application/json; charset=utf-8');
+                    header('Cache-control: no-store, no-cache, must-revalidate');
+                    header('Pragma: no-cache');
+                    header('HTTP/1.1 200 OK');
+                    echo json_encode($response);
+                }
+                else{
+                    header('HTTP/1.1 400 Bad Request');
+                    exit;
+                }
+                break;
+
+            case '/user/playlists/add':
+                if(isset($_POST['id_playlist']) && isset($_POST['id_music'])){
+
+                    $id_playlist = $_POST['id_playlist'];
+                    $id_music = $_POST['id_music'];
+                    $response = Playlist::add_music_playlist($id_playlist, $id_music, $db);
                     header('Content-Type: application/json; charset=utf-8');
                     header('Cache-control: no-store, no-cache, must-revalidate');
                     header('Pragma: no-cache');
@@ -242,6 +293,22 @@ switch ($method){
                     exit;
                 }
                 break;
+            case '/user/album/like':
+                if(isset($_POST['id_user']) && isset($_POST['id_album'])){
+                    $id_album = $_POST['id_album'];
+                    $id_user = $_POST['id_user'];
+                    $response = Users::usr_aime_album($id_user, $id_album, $db);
+                    header('Content-Type: application/json; charset=utf-8');
+                    header('Cache-control: no-store, no-cache, must-revalidate');
+                    header('Pragma: no-cache');
+                    header('HTTP/1.1 200 OK');
+                    echo json_encode($response);
+                }
+                else{
+                    header('HTTP/1.1 400 Bad Request');
+                    exit;
+                }
+                break;
             default :
                 header('HTTP/1.1 400 Bad Request');
                 exit;
@@ -265,11 +332,27 @@ switch ($method){
                     exit;
                 }
                 break;
-            case '/user/playlist/like':
+            case '/user/playlists/delete':
+                if(isset($_GET['id_playlist']) && isset($_GET['id_music'])){
+                    $id_playlist = $_GET['id_playlist'];
+                    $id_music = $_GET['id_music'];
+                    $response = Playlist::delete_music_playlist($id_playlist, $id_music, $db);
+                    header('Content-Type: application/json; charset=utf-8');
+                    header('Cache-control: no-store, no-cache, must-revalidate');
+                    header('Pragma: no-cache');
+                    header('HTTP/1.1 200 OK');
+                    echo json_encode($response);
+                }
+                else{
+                    header('HTTP/1.1 400 Bad Request');
+                    exit;
+                }
+                break;
+            case '/user/playlists/like':
                 if(isset($_GET['id_music']) && isset($_GET['id_user'])){
                     $id_music = $_GET['id_music'];
                     $id_user = $_GET['id_user'];
-                    $response = Music::ajout_music_like($id_music, $id_user, $db);
+                    $response = Music::delete_music_like($id_music, $id_user, $db);
                     header('Content-Type: application/json; charset=utf-8');
                     header('Cache-control: no-store, no-cache, must-revalidate');
                     header('Pragma: no-cache');
@@ -279,6 +362,22 @@ switch ($method){
                 else{
                     header('HTTP/1.1 400 Bad Request');
 
+                    exit;
+                }
+                break;
+            case '/user/album/like':
+                if(isset($_GET['id_user']) && isset($_GET['id_album'])){
+                    $id_user = $_GET['id_user'];
+                    $id_album = $_GET['id_album'];
+                    $response = Users::usr_aime_album_delete($id_user, $id_album, $db);
+                    header('Content-Type: application/json; charset=utf-8');
+                    header('Cache-control: no-store, no-cache, must-revalidate');
+                    header('Pragma: no-cache');
+                    header('HTTP/1.1 200 OK');
+                    echo json_encode($response);
+                }
+                else{
+                    header('HTTP/1.1 400 Bad Request');
                     exit;
                 }
                 break;
@@ -328,7 +427,7 @@ switch ($method){
                     $mail = $_PUT['mail'];
                     $birthdate = $_PUT['birthdate'];
                     $pseudo = $_PUT['pseudo'];
-                    $response = User::modifier_usr_sans_mdp($id_user, $mail, $lastname, $firstname, $birthdate, $pseudo, $db);
+                    $response = Users::modifier_usr_sans_mdp($id_user, $mail, $lastname, $firstname, $birthdate, $pseudo, $db);
                     header('Content-Type: application/json; charset=utf-8');
                     header('Cache-control: no-store, no-cache, must-revalidate');
                     header('Pragma: no-cache');
