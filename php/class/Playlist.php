@@ -92,7 +92,7 @@ class Playlist
             $stmtVerif->execute();
             $resultVerif = $stmtVerif->fetch(PDO::FETCH_ASSOC);
             
-            if($resultVerif['count']==1){
+            if($resultVerif['count']>=1){
                 return "playlist-exist";
             }
             //On vérifie que le nom de la playlist n'est pas "Favoris" ou "favoris" :
