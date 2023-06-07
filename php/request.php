@@ -7,6 +7,7 @@ require_once('class/Music.php');
 require_once('class/Artist.php');
 require_once('class/Playlist.php');
 require_once('class/Users.php');
+require_once('class/Historique.php');
 
 /*function print_array($array) {
     print("<pre>" . print_r($array, true) . "</pre>");
@@ -218,6 +219,21 @@ switch ($method){
                     exit;
                 }
                 break;
+            case '/user/historique':
+                if(isset($_GET['id_user'])){
+                    $id_user = $_GET['id_user'];
+                    $response = Historique::recup_hist($id_user, $db);
+                    header('Content-Type: application/json; charset=utf-8');
+                    header('Cache-control: no-store, no-cache, must-revalidate');
+                    header('Pragma: no-cache');
+                    header('HTTP/1.1 200 OK');
+                    echo json_encode($response);
+                }
+                else{
+                    header('HTTP/1.1 400 Bad Request');
+                    exit;
+                }
+                break;
         }
         break;
         
@@ -316,6 +332,22 @@ switch ($method){
                     $id_album = $_POST['id_album'];
                     $id_user = $_POST['id_user'];
                     $response = Users::usr_aime_album($id_user, $id_album, $db);
+                    header('Content-Type: application/json; charset=utf-8');
+                    header('Cache-control: no-store, no-cache, must-revalidate');
+                    header('Pragma: no-cache');
+                    header('HTTP/1.1 200 OK');
+                    echo json_encode($response);
+                }
+                else{
+                    header('HTTP/1.1 400 Bad Request');
+                    exit;
+                }
+                break;
+            case '/user/historique':
+                if(isset($_POST['id_user']) && isset($_POST['id_music'])){
+                    $id_user = $_POST['id_user'];
+                    $id_music = $_POST['id_music'];
+                    $response = Historique::add_hist($id_music, $id_user, $db);
                     header('Content-Type: application/json; charset=utf-8');
                     header('Cache-control: no-store, no-cache, must-revalidate');
                     header('Pragma: no-cache');
