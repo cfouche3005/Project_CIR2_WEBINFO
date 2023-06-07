@@ -2,11 +2,28 @@
 
 class Artist
 {
-    // Récupère le nom et info de l'artiste à partir de son pseudo
-    public static function nom_info_art($pseudo_artist) {
+    // Récupère tous les artistes et leurs informations
+    public static function all_art($conn) {
         try {
-            $conn = spotvi::connexionBD();
-            $sql = 'SELECT nom_info FROM artist WHERE pseudo_artist = :pseudo_artist';
+            
+            if($conn){
+                $sql = 'SELECT * FROM artist';
+                $stmt = $conn->prepare($sql);
+                $stmt->execute();
+                $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            }
+        } catch (PDOException $exception) {
+            error_log('Connection error: ' . $exception->getMessage());
+            return false;
+        }
+        return $result;
+    }
+
+    // Récupère l'id d'un artiste' à partir de son pseudo
+    public static function id_art($pseudo_artist, $conn) {
+        try {
+            
+            $sql = 'SELECT id_artist FROM artist WHERE pseudo_artist = :pseudo_artist';
             $stmt = $conn->prepare($sql);
             $stmt->bindParam(':pseudo_artist', $pseudo_artist);
             $stmt->execute();
@@ -15,16 +32,32 @@ class Artist
             error_log('Connection error: ' . $exception->getMessage());
             return false;
         }
-        return $result['nom_info'];
+        return $result['id_artist'];
     }
 
-    // Récupère le lien de la bio de l'artiste à partir de son pseudo
-    public static function biographie_lien_art($pseudo_artist) {
+    // Récupère le nom et info de l'artiste à partir de son id
+    public static function name_info_art($id_artist, $conn) {
         try {
-            $conn = spotvi::connexionBD();
-            $sql = 'SELECT biographie_lien FROM artist WHERE pseudo_artist = :pseudo_artist';
+            
+            $sql = 'SELECT name_info FROM artist WHERE id_artist = :id_artist';
             $stmt = $conn->prepare($sql);
-            $stmt->bindParam(':pseudo_artist', $pseudo_artist);
+            $stmt->bindParam(':id_artist', $id_artist);
+            $stmt->execute();
+            $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        } catch (PDOException $exception) {
+            error_log('Connection error: ' . $exception->getMessage());
+            return false;
+        }
+        return $result['name_info'];
+    }
+
+    // Récupère le lien de la biographie de l'artiste à partir de son id
+    public static function biographie_lien_art($id_artist, $conn) {
+        try {
+            
+            $sql = 'SELECT biographie_lien FROM artist WHERE id_artist = :id_artist';
+            $stmt = $conn->prepare($sql);
+            $stmt->bindParam(':id_artist', $id_artist);
             $stmt->execute();
             $result = $stmt->fetch(PDO::FETCH_ASSOC);
         } catch (PDOException $exception) {
@@ -34,29 +67,29 @@ class Artist
         return $result['biographie_lien'];
     }
 
-    // Récupère le type de l'artiste à partir de son pseudo
-    public static function type_art($pseudo_artist) {
+    // Récupère le type de l'artiste à partir de son id
+    public static function type_art($id_artist, $conn) {
         try {
-            $conn = spotvi::connexionBD();
-            $sql = 'SELECT type_artist FROM artist WHERE pseudo_artist = :pseudo_artist';
+            
+            $sql = 'SELECT type_artist_val FROM artist_appartient_type WHERE id_artist = :id_artist';
             $stmt = $conn->prepare($sql);
-            $stmt->bindParam(':pseudo_artist', $pseudo_artist);
+            $stmt->bindParam(':id_artist', $id_artist);
             $stmt->execute();
             $result = $stmt->fetch(PDO::FETCH_ASSOC);
         } catch (PDOException $exception) {
             error_log('Connection error: ' . $exception->getMessage());
             return false;
         }
-        return $result['type_artist'];
+        return $result['type_artist_val'];
     }
 
-    // Récupère la photo de l'artiste à partir de son pseudo
-    public static function photo_art($pseudo_artist) {
+    // Récupère la photo de l'artiste à partir de son id
+    public static function photo_art($id_artist, $conn) {
         try {
-            $conn = spotvi::connexionBD();
-            $sql = 'SELECT photo_artist FROM artist WHERE pseudo_artist = :pseudo_artist';
+            
+            $sql = 'SELECT photo_artist FROM artist WHERE id_artist = :id_artist';
             $stmt = $conn->prepare($sql);
-            $stmt->bindParam(':pseudo_artist', $pseudo_artist);
+            $stmt->bindParam(':id_artist', $id_artist);
             $stmt->execute();
             $result = $stmt->fetch(PDO::FETCH_ASSOC);
         } catch (PDOException $exception) {
@@ -64,5 +97,42 @@ class Artist
             return false;
         }
         return $result['photo_artist'];
+    }
+    //fonction qui récupère les informations de l'artiste, les albums dans lequel il est ainsi que 6 musiques produites par l'artiste
+    public static function info_artiste($id_artist, $conn) {
+        try {
+
+            $sqlMusic = 'SELECT title_music from music m join compose_music cm on m.id_music=cm.id_music join artist a on cm.id_artist=a.id_artist where a.id_artist=:id_artist limit 6';
+            
+            
+            $sqlAlbum = 'SELECT * from album a join compose_album ca on a.id_album=ca.id_album join artist ar on ca.id_artist=ar.id_artist where ar.id_artist=:id_artist';
+            $stmt = $conn->prepare($sqlAlbum);
+            $stmt->bindParam(':id_artist', $id_artist);
+            $stmt->execute();
+            $resultAlbum = $stmt->fetchAll(PDO::FETCH_ASSOC);
+           
+            $sqlArtist = 'SELECT * from artist where id_artist=:id_artist';
+            $stmt1 = $conn->prepare($sqlArtist);
+            $stmt1->bindParam(':id_artist', $id_artist);
+            $stmt1->execute();
+            $resultArtist = $stmt1->fetchAll(PDO::FETCH_ASSOC);
+            
+            $EndResult = array();
+            foreach ($resultAlbum as $album) 
+            {
+                $stmt2 = $conn->prepare($sqlMusic);
+                $stmt2->bindParam(':id_album', $album['id_album']);
+                $stmt2->execute();
+                $resultMusic = $stmt2->fetchAll(PDO::FETCH_ASSOC);
+                $album['musics']=$resultMusic; 
+                array_push($Endresult,$album);
+            }
+            return $EndResult;
+           
+        } catch (PDOException $exception) {
+            error_log('Connection error: ' . $exception->getMessage());
+            return false;
+        }
+        
     }
 }
