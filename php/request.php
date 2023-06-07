@@ -359,6 +359,22 @@ switch ($method){
                     exit;
                 }
                 break;
+            case '/user/artist':
+                if (isset($_POST['id_artist'])){
+                    
+                    $id_artist = $_POST['id_artist'];
+                    $response = Users::info_artiste($id_artist, $db);
+                    header('Content-Type: application/json; charset=utf-8');
+                    header('Cache-control: no-store, no-cache, must-revalidate'); 
+                    header('Pragma: no-cache');
+                    header('HTTP/1.1 200 OK');
+                    echo json_encode($response);
+                }
+                else{
+                    header('HTTP/1.1 400 Bad Request');
+                    exit;
+                }
+                break;
             default :
                 header('HTTP/1.1 400 Bad Request');
                 exit;
