@@ -1,0 +1,69 @@
+body{
+    background-color:#242424 ;
+    color: white;
+}
+
+#container{
+    /* mise en forme du conteneur principal */
+    width: 90%;
+    margin: 5% 5% 2%;
+    display: flex;
+    flex-direction: column;
+    background-color: #303030!important;
+    padding: 5%;
+    box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2), 0 5px 5px 0 rgba(0, 0, 0, 0.24);
+    border-radius: 10px;
+}
+
+.image_profil {
+    width: 25%;
+}
+
+.titre{
+    display: flex;
+    padding: 1%;
+    margin-bottom: 1%;
+    background-color: #454545!important;;
+    color: white!important;
+    border-radius: 10px;
+    font-size: medium;
+}
+
+.button_top{
+    /* mise en forme du bouton de soumission du formulaire */
+    text-align: center;
+    background-color: #454545!important;
+    font-size: x-large;
+    padding: 3%;
+    color: white;
+    border: 1px solid #858585;
+    cursor: pointer;
+    border-radius: 50px;
+    transition: all 0.3s ease-in-out;
+}
+
+.button_top:hover {
+    /* mise en forme du bouton de soumission du formulaire au survol */
+    background-color: white;
+    color: white;
+    border: 1px solid white;
+}
+
+.button_bot{
+    /* mise en forme du bouton de soumission du formulaire */
+    text-align: center;
+    margin-left: 1%;
+    background-color: #454545!important;
+    color: white;
+    border: 1px solid #858585;
+    cursor: pointer;
+    border-radius: 50px;
+    transition: all 0.3s ease-in-out;
+}
+
+.button_bot:hover {
+    /* mise en forme du bouton de soumission du formulaire au survol */
+    background-color: white;
+    color: white;
+    border: 1px solid white;
+}

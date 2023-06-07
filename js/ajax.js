@@ -16,11 +16,11 @@ function ajaxRequest(type, url, callback, data = null)
     {
       case 200:
       case 201:
-        console.log(xhr.responseText);
+        //console.log(xhr.responseText);
         callback(JSON.parse(xhr.responseText));
         break;
       default:
-        httpErrors(xhr.status);
+        callback(JSON.parse(httpErrors(xhr.status)));
     }
   };
 
@@ -43,6 +43,7 @@ function httpErrors(errorCode)
   if (errorCode in messages)
   {
     console.log(messages[errorCode]);
+    return false;
     // $('#errors').html('<strong>' + messages[errorCode] + '</strong>');
     // $('#errors').show();
     // setTimeout(() =>
@@ -52,7 +53,8 @@ function httpErrors(errorCode)
   }
 }
 
-
 // ajaxRequest('GET', 'https://projet-webinfo.cfouche-serv.fr/music/alan_walker/alan_walker_-_different_world/1_-_alan_walker_-_intro.opus', (response) => {
 //   console.log(response);
 // });
+
+export { ajaxRequest };

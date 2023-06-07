@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="fr">
+
+    <head>
+
+        <!-- Meta tags -->
+        <meta charset=" utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+        <!-- Title -->
+        <title>LOGIN</title>
+
+        <!-- JS Scripts -->
+        <script src="../../../lib/scripts/jquery-3.7.0.min.js"></script>
+        <script src="../../../lib/scripts/bootstrap.bundle.min.js"></script>
+        <script type="module" src="page.js" defer></script>
+
+        <!-- CSS Styles -->
+        <link rel="stylesheet" href="../../../lib/styles/bootstrap.min.css">
+        <link rel="stylesheet" href="page.css">
+
+    </head>
+    <body>
+        <!-- formulaire de connexion -->
+        <div id="container">
+            <form action="" id="loginform" method="POST">
+
+                <!-- titre du formulaire -->
+                <h1>Connexion</h1>
+                <input id="mail" type="text" placeholder="Mail" name="mail" required>
+
+                <!-- champ de saisie pour le mot de passe -->
+                <input id="password" type="password" placeholder="Mot de passe" name="password" required>
+                <!-- bouton de soumission du formulaire -->
+
+                <button type="submit" id='submit' style="background-color: #3584E4">Se connecter</button>
+                <button type='button' id='inscrire' style="background-color: black" onclick="location.href='#/auth/register'">S'inscrire</button>
+            </form>
+        </div>
+        <div id="toast" class="toast-container position-fixed bottom-0 end-0 p-3">
+            <div id="liveToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+                  <div id='toastmsg' class="toast-body">
+              </div>
+            </div>
+          </div>
+    </body>
+</html>

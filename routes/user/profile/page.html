@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="fr">
+    <head>
+
+        <!-- Meta tags -->
+        <meta charset=" utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+        <!-- Title -->
+        <title>PROFILE</title>
+
+        <!-- JS Scripts -->
+        <script src="../../../lib/scripts/jquery-3.7.0.min.js"></script>
+        <script src="../../../lib/scripts/bootstrap.bundle.min.js"></script>
+        <script type="module" src="page.js" defer></script>
+
+        <!-- CSS Styles -->
+        <link rel="stylesheet" href="../../../lib/styles/bootstrap.min.css">
+        <link rel="stylesheet" href="../../../styles/styles.css">
+        <link rel="stylesheet" href="page.css">
+    </head>
+
+    <body>
+        <div class="d-flex">
+            <div class="ps-5 d-flex flex-column">
+                <div class="image-container">
+                    <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava1-bg.webp" alt="Avatar" class="image_profil"/>
+                </div>
+                <br>
+                <button type="submit" id='modif_photo'>Modifier la photo</button>
+                <button type="submit" id='info_modif'>Changer informations</button>
+                <button type="submit" id='logout' style="background-color: #C01C28!important">Déconnexion</button>
+            </div>
+            <div id="container">
+                <br>
+                <label class="label-input">
+                    <input id="nom" type="text" placeholder="Nom" name="nom">
+                    <input id="prenom" type="text" placeholder="Prénom" name="prenom">
+                </label>
+                <label class="label-input">
+                    <input id="date" type="date" placeholder="Date de naissance" name="date">
+                    <input id="mail" type="email" placeholder="Mail" name="mail">
+                </label>
+                <br><br><br>
+                <label class="label-input">
+                    <input id="password" type="password" placeholder="Nouveau mot de passe" name="new_pwd">
+                    <input id="pass-verif" type="password" placeholder="Confirmer mot de passe" name="conf_new_pwd">
+                </label>
+                <div id="error" style="color:#C01C28;"></div>
+            </div>
+        </div>
+    </body>
+</html>

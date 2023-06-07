@@ -34,3 +34,30 @@
     border: none!important;
     color: #858585!important;
 }
+
+.active{
+    background-color: #454545!important;
+}
+
+.modal-header{
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+}
+
+.modal-footer{
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+}
+
+.modal-content{
+    background-color: transparent!important;
+}
+
+.btn-primary{
+    background-color: #3584E4!important;
+
+}
+
+.bi::before{
+    vertical-align: -15%!important;
+}

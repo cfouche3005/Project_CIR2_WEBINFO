@@ -1,65 +1,99 @@
-<html class="w-100 h-100>
+<html class="w-100 h-100">
 
 <head>
+
     <!-- Meta tags -->
     <meta charset=" utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-<!-- Title -->
-<title>SPOTVI</title>
+    <!-- Title -->
+    <title>SPOTVI</title>
 
-<!-- JS Scripts -->
-<script src="lib/scripts/jquery-3.7.0.min.js"></script>
-<script src="lib/scripts/bootstrap.bundle.min.js"></script>
-<script src="js/ajax.js" defer></script>
+    <!-- JS Scripts -->
 
-<!-- CSS Styles -->
-<link rel="stylesheet" href="lib/styles/bootstrap.min.css">
-<link rel="stylesheet" href="styles/styles.css">
 
 </head>
 
 <body class="d-flex flex-column">
 
+    <script src="lib/scripts/jquery-3.7.0.min.js"></script>
+    <script src="lib/scripts/bootstrap.bundle.min.js"></script>
+    <script type="module" src="js/main.js" defer></script>
+
+
+    <!-- CSS Styles -->
+    <link rel="stylesheet" href="lib/styles/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="styles/styles.css">
+
     <header>
-        <nav class="navbar fixed-top back-bar">
+        <nav class="navbar navbar-expand-lg fixed-top back-bar">
             <div class="container-fluid">
-                <ul class="nav">
-                    <a class="navbar-brand text-white" href="#/"><img
-                            src="https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons/svg/spotify.svg" alt="icon"
-                            width="30" height="30" class="d-inline-block align-text-top"> SPOTVI</a>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Playlists</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" aria-current="page" href="#">Album</a>
-                    </li>
-                    <li>
-                        <div class="input-group">
-                            <button class="btn research-button" type="button" id="button-addon1">Button</button>
-                            <input type="text" class="form-control research-input" placeholder="Recipient's username"
-                                aria-label="Example text with button addon" aria-describedby="button-addon1">
-                        </div>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" aria-current="page" href="#">Profil</a>
-                    </li>
-                </ul>
+                <div class="nav-item">
+                    <a class="navbar-brand text-white" href="#/">
+                        <img src="https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons/svg/spotify.svg" alt="icon"
+                            width="30" height="30" class="d-inline-block align-text-top"> SPOTVI
+                    </a>
+                </div>
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav nav-pills me-auto mb-2 mb-lg-0">
+                        <li class="nav-item">
+                            <a class="nav-link " href="#/user/library/playlists">Playlists</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link " aria-current="page" href="#/user/library/albums">Albums</a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="input-group w-25" style="margin-right: 35% ;">
+                    <button class="btn research-button" type="button" id="button-addon1">
+                        <i class="bi bi-search"></i>
+                    </button>
+                    <input type="text" class="form-control d-flex research-input" placeholder="Rechercher du contenu..."
+                        aria-label="Example text with button addon" aria-describedby="button-addon1">
+                </div>
+                <div class="nav-item nav-pills me-auto">
+                    <a class="nav-link " aria-current="page" href="#/user/profile">Profil</a>
+                </div>
             </div>
         </nav>
     </header>
 
     <main id="middle" class="back-mid position-absolute top-50 start-50 translate-middle w-100 h-100 padding-main">
+        <iframe id='inner-content' src="" frameborder="0" class="w-100 h-100" referrerpolicy='no-referrer'></iframe>
 
     </main>
 
     <footer>
         <nav class="navbar fixed-bottom back-bar flex-shrink-0">
+            <input type="range" class="position-absolute top-0 start-50 translate-middle  w-100">
             <div class="container-fluid">
-                <a class="navbar-brand text-white" href="#">Fixed bottom</a>
+                <a class="navbar-brand text-white" href="#">
+                    <img id="playcover" src="https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons/svg/spotify.svg" alt="icon"width="30" height="30" class="d-inline-block align-text-top"> Music title<small id="playartists"> test</small>
+                </a>
+                <audio id="audioplayer" crossorigin="*" autoplay controls src="" ></audio>
+                <div class="btn-group" role="group" aria-label="Basic example">
+                    <button type="button" class="btn btn-primary"><i class="bi bi-skip-backward"></i></button>
+                    <button type="button" class="btn btn-primary"><i class="bi bi-play"></i> </button>
+                    <button type="button" class="btn btn-primary"><i class="bi bi-skip-forward"></i></button>
+                </div>
             </div>
         </nav>
     </footer>
+
+    <div class="modal fade" id="loginModal" tabindex="-1" aria-hidden="true" data-bs-backdrop="static">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header border-bottom-0 back-bar nav-link">
+                    <h1 class="modal-title fs-5">Veuiller vous connectez ou vous créez un compte</h1>
+                </div>
+                <div class="modal-footer border-top-0 back-bar nav-link">
+                    <button type="button" class="btn btn-primary" onclick="location.href='#/auth/login'" data-bs-dismiss="modal">Se connecter</button>
+                    <button type="button" class="btn btn-primary" onclick="location.href='#/auth/register'" data-bs-dismiss="modal">Créer un compte</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
 </body>
 

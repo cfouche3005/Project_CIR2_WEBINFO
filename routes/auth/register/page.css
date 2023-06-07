@@ -1,0 +1,69 @@
+html, body {
+    height: 100%; /* Ajout de la hauteur de 100% pour centrer verticalement */
+    margin: 0; /* Suppression des marges par défaut */
+    padding: 0; /* Suppression des paddings par défaut */
+}
+
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #242424;
+    color: white;
+}
+
+#container {
+    width: 100%;
+    max-width: 400px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    background-color: #303030!important;
+    border-radius: 50px;
+    padding: 30px;
+    box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2), 0 5px 5px 0 rgba(0, 0, 0, 0.24);
+}
+form {
+    /* mise en forme du formulaire */
+    width: 100%;
+}
+
+#container h1{
+    /* mise en forme du titre du formulaire */
+    width: 100%;
+    text-align: center;
+    color: white;
+    margin-bottom: 20px;
+}
+
+input{
+    /* mise en forme des champs de saisie */
+    background-color: #454545!important;
+    color: #858585!important;
+    width: 100%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #858585;
+    border-radius: 10px;
+}
+
+button{
+    /* mise en forme du bouton de soumission du formulaire */
+    color: white;
+    padding: 10px 9px;
+    width: 40%;
+    margin: 3%;
+    border: none;
+    cursor: pointer;
+    border-radius: 10px;
+    transition: all 0.3s ease-in-out;
+}
+
+button:hover {
+    /* mise en forme du bouton de soumission du formulaire au survol */
+    background-color: white;
+    color: white;
+    border: 1px solid white;
+}
