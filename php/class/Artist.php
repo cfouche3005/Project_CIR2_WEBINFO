@@ -128,11 +128,12 @@ class Artist
                 $album['musics']=$resultMusic; //potentielle erreur
                 array_push($Endresult,$album);
             }
+            return $EndResult;
            
         } catch (PDOException $exception) {
             error_log('Connection error: ' . $exception->getMessage());
             return false;
         }
-        return $result;
+        
     }
 }
