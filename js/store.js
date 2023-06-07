@@ -62,7 +62,7 @@ class ComponentStore {
     return firstpart+secondpart+thirdpart;
   };
 
-  static #musiccard_artist_eventlisten(trackid,trackartists,trackojb) {
+  static #musiccard_album_eventlisten(trackid,trackartists,trackojb) {
 
     $(`#`+trackid+`_trackplay`).click((e) => {
       e.preventDefault();
@@ -99,6 +99,7 @@ class ComponentStore {
 
   static displayAlbumPage(div_cover,div_name,div_artist,div_date,div_type,div_tracks,albumdata,div_albumplay,div_add) {
       console.log(albumdata.album[0].nom_album)
+      
       $(div_cover).attr("src",albumdata.album[0].image_album);
       $(div_name).html(`<span>Nom album : </span><span id="`+albumdata.album[0].id_album+`_albumname" style="font-size: larger;">`+albumdata.album[0].nom_album+`</span>`);
 
@@ -116,7 +117,7 @@ class ComponentStore {
 
       albumdata.musics.forEach((track) => {
         $(div_tracks).append(this.#musiccard_album_html(track.id_music,track.place_album,track.title_music,track.artists,track.time_music));
-        this.#musiccard_artist_eventlisten(track.id_music,track.artists,track);
+        this.#musiccard_album_eventlisten(track.id_music,track.artists,track);
       });
 
       $(div_albumplay).click((e) => {
@@ -187,12 +188,101 @@ class ComponentStore {
     static displayPlaylistLibrary(div_playlists,playlistsdata) {
       $(div_playlists).html(``);
       playlistsdata.forEach((playlist) => {
-        $(div_playlists).append(this.#playlist_card_html(playlist.id_playlist,playlist.image_playlist,playlist.nom_playlist,playlist.date_modif_playlist));
+        $(div_playlists).append(this.#playlist_card_html(playlist.id_playlist,'https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava1-bg.webp',playlist.nom_playlist,playlist.date_modif));
         this.#playlist_card_eventlisten(playlist.id_playlist);
       });
     };
+
+    static displayAlbumLibrary(div_albums,albumsdata) {
+      $(div_albums).html(``);
+      albumsdata.forEach((album) => {
+        $(div_albums).append(this.#album_card_html(album.id_album,album.image_album,album.nom_album,album.pseudo_artist,album.id_artist));
+        this.#album_card_eventlisten(album.id_album,album.pseudo_artist,album.id_artist);
+      });
     };
 
+    static #musiccard_playlist_html(trackid,trackname,trackartists,trackduration) {
+      const firstpart = `<div class="titre" id="`+trackid+`_track">
+                          <p id="`+trackid+`_trackname" class="card-title ps-4 align-self-center">`+trackname+`</p>
+                          <p id="`+trackid+`_trackartists" class="d-flex flex-row card-title ps-4 align-self-center" style="color: #858585!important;">`;
+  
+      let secondpart =``;
+  
+      trackartists.forEach((artist) => {
+        secondpart += `|<span id="`+trackid+`_trackartist_`+artist.id_artist+`" class="">`+artist.pseudo_artist+`</span>`;
+      });
+      secondpart += `|</p>`
+  
+      const thirdpart = `<p class="card-title ps-4 align-self-center" style="color: #858585!important;"><i class="bi bi-clock"></i></p>
+                          <p id="`+trackid+`_trackduration" class="card-title ps-1 align-self-center" style="color: #858585!important;">`+this.formatTime(trackduration)+`</p>
+                          <button id="`+trackid+`_trackplay" type="submit" class="ms-auto p-2 button_bot"><i class="bi bi-play-fill"></i></button>
+                          <button id="`+trackid+`_tracklike" type="submit" class="p-2 button_bot"><i class="bi bi-heart"></i></button>
+                          <button type="submit" class="p-2 button_bot"><i class="bi bi-plus"></i></button>
+                          </div>`
+      
+      return firstpart+secondpart+thirdpart;
+    };
+
+    static #musiccard_playlist_eventlisten(trackid,trackartists,trackojb) {
+
+      $(`#`+trackid+`_trackplay`).click((e) => {
+        e.preventDefault();
+        console.log("Play clicked : "+trackid);
+        const playmusic = new CustomEvent('playmusic', {detail: {track: trackojb}});
+        window.parent.document.dispatchEvent(playmusic);
+      });
+  
+      $(`#`+trackid+`_tracklike`).click((e) => {
+        e.preventDefault();
+        console.log("Play clicked : "+trackid);
+        const playmusic = new CustomEvent('playmusic', {detail: {track: trackojb}});
+        window.parent.document.dispatchEvent(playmusic);
+      });
+  
+      trackartists.forEach((artist) => {
+        $(`#`+trackid+`_trackartist_`+artist.id_artist).click((e) => {
+          e.preventDefault();
+          console.log("Artist clicked : "+artist.id_artist);
+          const pagechange = new CustomEvent('pagechange', {detail: {href: '#/content/artist/$'+artist.id_artist}});
+          window.parent.document.dispatchEvent(pagechange);
+        });
+      });
+    };
+
+    static cleanPlaylistPage(div_cover,div_name,div_createur,div_datecrea,div_datemodif,div_tracks) {
+      $(div_cover).attr("src","");
+      $(div_name).html("");
+      $(div_createur).html("");
+      $(div_datecrea).html("");
+      $(div_datemodif).html("");
+      $(div_tracks).html("");
+    }
+
+    static displayplaylistPage(div_cover,div_name,div_createur,div_datecrea,div_datemodif,div_tracks,playlistdata,div_playlistplay,div_add) {
+      console.log(playlistdata.playlist[0].nom_playlist)
+      $(div_cover).attr("src",'https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava1-bg.webp');
+      $(div_name).html(`<span>Nom Playlist : </span><span id="`+playlistdata.playlist[0].id_playlist+`_playlistname" style="font-size: larger;">`+playlistdata.playlist[0].nom_playlist+`</span>`);
+
+      $(div_createur).html(`<span>Créateur : </span><span id="`+playlistdata.playlist[0].id_playlist+`_playlistartist_`+UserStore.userdata.id_user+`" style="font-size: larger;">`+UserStore.userdata.pseudo_user+`</span>`);
+      // $(`#`+playlistdata.playlist[0].id_playlist+`_albumartist_`+playlistdata.playlist[0].id_artist).click((e) => {
+      //   e.preventDefault();
+      //   console.log("Artist clicked : "+playlistdata.playlist[0].id_artist);
+      //   const pagechange = new CustomEvent('pagechange', {detail: {href: '#/content/artist/$'+playlistdata.playlist[0].id_artist}});
+      //   window.parent.document.dispatchEvent(pagechange);
+      // });
+
+      $(div_datecrea).html(`<span>Date de création : </span><span id="`+playlistdata.playlist[0].id_playlist+`_playlistcreadate" style="font-size: larger;">`+playlistdata.playlist[0].date_creation+`</span>`);
+      $(div_datemodif).html(`<span>Date de modification : </span><span id="`+playlistdata.playlist[0].id_playlist+`_playlistmodifdate" style="font-size: larger;">`+playlistdata.playlist[0].date_modif+`</span>`);
+      $(div_tracks).html(``);
+
+      playlistdata.musics.forEach((track) => {
+        $(div_tracks).append(this.#musiccard_playlist_html(track.id_music,track.title_music,track.artists,track.time_music));
+        this.#musiccard_playlist_eventlisten(track.id_music,track.artists,track);
+      });
+
+};
+
+};
 
 const baseurl = "http://10.10.51.73/Project_CIR2_WEBINFO/php/request.php/";
 
