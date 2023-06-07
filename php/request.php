@@ -83,8 +83,8 @@ $requestRessource = array_shift($request);
 //print_r(json_encode($test));
 //echo tt;
 
-$method = $_SERVER['REQUEST_METHOD'];
-$path = $_SERVER['PATH_INFO'];
+//$method = $_SERVER['REQUEST_METHOD'];
+//$path = $_SERVER['PATH_INFO'];
 /*
 $test=Album::info_album('2ecdc503-8f4e-488c-aee2-d35d87916021', $db);
 echo json_encode($test);
@@ -99,6 +99,9 @@ echo json_encode($test);
 
 
 //Artist::info_artiste('847f8b9d-b8c5-408f-aa42-ab8fa67d10c5', $db);
+
+//print_r(json_encode(Artist::info_artiste('0e7aa75b-225d-46a1-9fee-0b286056f4d0', $db)));
+
 
 
 
@@ -184,7 +187,7 @@ switch ($method){
                     exit;
                 }
                 break;
-            case '/user/content/playlist':
+            case '/content/playlist':
                 if(isset($_GET['id_playlist'])){
                     $id_playlist = $_GET['id_playlist'];
                     $response = Playlist::get_music_playlist($id_playlist, $db);
