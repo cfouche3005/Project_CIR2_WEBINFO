@@ -57,3 +57,7 @@
     background-color: #3584E4!important;
 
 }
+
+.bi::before{
+    vertical-align: -15%!important;
+}

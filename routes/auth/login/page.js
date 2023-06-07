@@ -1,5 +1,12 @@
 import { ajaxRequest } from "../../../js/ajax.js";
-import { userstore } from "../../../js/store.js";
+import { UserStore,baseurl } from "../../../js/store.js";
+
+
+window.onload = (event) => {
+    const iframeReady = new CustomEvent('iframeready');
+    window.parent.document.dispatchEvent(iframeReady);
+  };
+
 
 $("#inscrire").click((e)=>{
     const pagechange = new CustomEvent('pagechange', {detail: {href: '#/auth/register'}});
@@ -9,11 +16,12 @@ $("#inscrire").click((e)=>{
 $("#loginform").on('submit',(e)=>{
     e.preventDefault();
     console.log('mail='+$('#mail').val()+'&password='+$('#password').val())
-    ajaxRequest('POST', '/php/request.php/auth/login',(result) => {
+    ajaxRequest('POST', baseurl+'auth/login',(result) => {
+        console.log(result);
         if (!result){
             $('#toast').addClass("bg-danger");
             $('#toastmsd').text("Erreur de connexion");
-            const toastBootstrap = bootstrap.Toast.getOrCreateInstance($('#toastliveToast'));
+            const toastBootstrap = bootstrap.Toast.getOrCreateInstance($('#liveToast'));
             toastBootstrap.show();
             setTimeout(() => {
                 toastBootstrap.hide();
@@ -21,22 +29,22 @@ $("#loginform").on('submit',(e)=>{
                 $('#toastmsd').text("");
             },3000);
         }else{
-            $('#toast').addClass("bg-success");
-            $('#toastmsd').text("Connexion réussie");
-            const toastBootstrap = bootstrap.Toast.getOrCreateInstance($('#toastliveToast'));
-            toastBootstrap.show();
-            if(userstore.SetUserData(result)){
+            
+            if(UserStore.SetUserData(result)){
+                $('#toast').addClass("bg-success");
+                $('#toastmsd').text("Connexion réussie");
+                const toastBootstrap = bootstrap.Toast.getOrCreateInstance($('#liveToast'));
+                toastBootstrap.show();
                 setTimeout(() => {
                     toastBootstrap.hide();
                     $('#toast').removeClass("bg-success");
                     $('#toastmsd').text("");
-                    const pagechange = new CustomEvent('pagechange', {detail: {href: '#/'}});
-                    window.parent.document.dispatchEvent(pagechange);
+                    window.parent.location.hash = '#/';
              },3000);
             }else{
                 $('#toast').addClass("bg-danger");
                 $('#toastmsd').text("Erreur de connexion");
-                const toastBootstrap = bootstrap.Toast.getOrCreateInstance($('#toastliveToast'));
+                const toastBootstrap = bootstrap.Toast.getOrCreateInstance($('#liveToast'));
                 toastBootstrap.show();
                 setTimeout(() => {
                     toastBootstrap.hide();

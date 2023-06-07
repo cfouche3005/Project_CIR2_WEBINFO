@@ -1,11 +1,15 @@
-import { userstore } from "./store.js";
+import { UserStore } from "./store.js";
+
 
 function checklogin_iframe() {
-    if (!userstore.isconnected) {
+    console.log(UserStore.isconnected);
+    if (!UserStore.isconnected) {
             console.log("Not logged in iframe");
             const eventNotLogged = new CustomEvent('notlogged');
             window.parent.document.dispatchEvent(eventNotLogged);
             return false;
+    }else{
+        return true;
     }
         
 }
