@@ -152,7 +152,7 @@ switch ($method){
                     exit;
                 }
                 break;
-            case '/user/album':
+            case '/user/albums':
                 if(isset($_GET['id_user'])){
                     $id_user = $_GET['id_user'];
                     $response = Album::album_user($id_user,$db);
