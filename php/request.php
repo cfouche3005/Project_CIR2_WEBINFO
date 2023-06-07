@@ -101,6 +101,9 @@ echo json_encode($test);
 
 //Artist::info_artiste('847f8b9d-b8c5-408f-aa42-ab8fa67d10c5', $db);
 
+//print_r(json_encode(Artist::info_artiste('0e7aa75b-225d-46a1-9fee-0b286056f4d0', $db)));
+
+
 
 
 switch ($method){
@@ -185,7 +188,7 @@ switch ($method){
                     exit;
                 }
                 break;
-            case '/user/content/playlist':
+            case '/content/playlist':
                 if(isset($_GET['id_playlist'])){
                     $id_playlist = $_GET['id_playlist'];
                     $response = Playlist::get_music_playlist($id_playlist, $db);

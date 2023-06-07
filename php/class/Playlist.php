@@ -293,7 +293,7 @@ class Playlist
                 }
                 
                 // $fresult['artist']=$resultArtist;
-                $fresult['album']=$resultPlaylist;
+                $fresult['playlist']=$resultPlaylist;
                 $fresult['musics']=$Endresult;
                 return $fresult;
                 
