@@ -131,18 +131,17 @@ class Album
     // Récupère les albums d'un user
     public static function album_user($id_user, $conn) {
         try {
-
             $sql = 'SELECT album.id_album, nom_album, date_album, image_album, type_album_val,a.id_artist,a.pseudo_artist 
                 FROM album 
                 JOIN compose_album ca ON album.id_album = ca.id_album 
                 JOIN artist a ON a.id_artist = ca.id_artist 
                 JOIN aime_album aa ON album.id_album = aa.id_album 
                 JOIN users u ON u.id_user = aa.id_user 
-                WHERE album.id_album = :id_album';
+                WHERE u.id_user = :id_user';
             $stmt = $conn->prepare($sql);
             $stmt->bindParam(':id_user', $id_user);
             $stmt->execute();
-            $result = $stmt->fetch(PDO::FETCH_ASSOC);
+            $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
         } catch (PDOException $exception) {
             error_log('Connection error: ' . $exception->getMessage());
             return false;

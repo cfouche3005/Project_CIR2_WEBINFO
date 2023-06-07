@@ -152,6 +152,21 @@ switch ($method){
                     exit;
                 }
                 break;
+            case '/user/album':
+                if(isset($_GET['id_user'])){
+                    $id_user = $_GET['id_user'];
+                    $response = Album::album_user($id_user,$db);
+                    header('Content-Type: application/json; charset=utf-8');
+                    header('Cache-control: no-store, no-cache, must-revalidate');
+                    header('Pragma: no-cache');
+                    header('HTTP/1.1 200 OK');
+                    echo json_encode($response);
+                }
+                else{
+                    header('HTTP/1.1 400 Bad Request');
+                    exit;
+                }
+                break;
             case '/user/playlists/like':
                 if(isset($_GET['id_music']) && isset($_GET['id_user'])){
                     $id_music = $_GET['id_music'];
