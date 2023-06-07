@@ -10,9 +10,9 @@ class Album
                 $sql = 'SELECT * FROM album';
                 $stmt = $conn->prepare($sql);
                 $stmt->execute();
-                $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                $result = $stmt->fetchAll(PDO::FETCH_ASSOC); // Récupère toutes les lignes et les renvoie sous forme de tableau associatif
             }
-        } catch (PDOException $exception) {
+        } catch (PDOException $exception) { // Gestion des erreurs, renvoie false dès qu'une erreur est rencontrée
             error_log('Connection error: ' . $exception->getMessage());
             return false;
         }
@@ -48,7 +48,7 @@ class Album
             error_log('Connection error: ' . $exception->getMessage());
             return false;
         }
-        return $result['date_album'];
+        return $result['date_album']; 
     }
 
     // Récupère l'image de l'album à partir de son id
@@ -85,15 +85,10 @@ class Album
     //fonction qui a partir de l'id d'un album retourne toutes les infos et musiques de l'album
     public static function info_album($id_album, $conn){
         try {
-            //requete sql qui selectionne le nom de toutes les musiques d'un album ainsi que les infos de l'album
-            //$sql = 'SELECT nom_album, date_album, image_album from music m JOIN contient c ON c.id_music=m.id_music JOIN album a ON a.id_album=c.id_album JOIN type_album t ON t.type_album_val=a.type_album_val WHERE a.id_album = :id_album';
-            //$sql2= 'SELECT id_music, lien_music, title_music, time_music, place_album FROM music m JOIN contient c ON c.id_music=m.id_music JOIN album a ON a.id_album=c.id_album JOIN type_album t ON t.type_album_val=a.type_album_val WHERE a.id_album = :id_album ORDER BY place_album';
-            //$sqlAlbum = 'SELECT id_album, nom_album, date_album, image_album, type_album_val from album WHERE id_album = :id_album';
+            
             $sqlAlbum= 'SELECT album.id_album, nom_album, date_album, image_album, type_album_val,a.id_artist,a.pseudo_artist from album JOIN compose_album ca on album.id_album = ca.id_album JOIN artist a on a.id_artist = ca.id_artist WHERE album.id_album = :id_album';
             $sqlMusic= 'SELECT c.id_music, lien_music, title_music, time_music, place_album FROM music m JOIN contient c on c.id_music=m.id_music JOIN album a ON a.id_album=c.id_album WHERE a.id_album = :id_album ORDER BY place_album';
-            //$sql4= 'SELECT * from artist a JOIN compose_album ca ON a.id_artist = ca.id_artist JOIN album al ON al.id_album = ca.id_album WHERE al.id_album = :id_album';
             $sqlArtist='SELECT a.id_artist,pseudo_artist FROM artist a JOIN compose_music cm on a.id_artist = cm.id_artist WHERE cm.id_music = :id_music';
-            //$sql6='select * from music m join contient c on c.id_music=m.id_music JOIN album a ON a.id_album=c.id_album JOIN type_album t ON t.type_album_val=a.type_album_val';
             $stmt = $conn->prepare($sqlAlbum);
             $stmt->bindParam(':id_album', $id_album);
             $stmt->execute();
@@ -106,7 +101,7 @@ class Album
 
             $Endresult  = array();
 
-            foreach ($resultMusic as $music ) {
+            foreach ($resultMusic as $music ) { // On veut récupérer les artistes de chaque musique et les renvoyer sous forme de tableau
                 $stmt2 = $conn->prepare($sqlArtist);
                 $stmt2->bindParam(':id_music', $music['id_music']);
                 $stmt2->execute();
@@ -117,7 +112,7 @@ class Album
             }
 
             
-            //on assemble les deux tableaux $resultat et $resultat1
+            //on assemble les deux tableaux $resultAlbum et $Endresult dans un tableau $fresult
         
             $fresult['album']=$resultAlbum;
             $fresult['musics']=$Endresult;
@@ -149,7 +144,7 @@ class Album
         return $result;
     }
 
-    // Récupère 5 albums random
+    // Récupère 5 albums aléatoires 
     public static function album_random($numbers, $conn) {
         try {
 

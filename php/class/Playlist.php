@@ -2,7 +2,7 @@
 
 class Playlist
 {
-    // Récupère les infos de toutes les playlists
+    // Récupère les informations de toutes les playlists
     public static function info_pla($conn) {
         try {
 
@@ -81,6 +81,7 @@ class Playlist
         }
         return $result['date_creation'];
     }
+    // Fonction qui crée une playlist 
     public static function creer_playlist($nom_playlist, $id_user, $conn) {
         try {
             
@@ -119,6 +120,7 @@ class Playlist
         }
         
     }
+    // Fonction qui permet de modifier une playlist (son nom et mettre à jour sa date de modification)
     public static function modifier_playlist($nom_playlist, $id_playlist, $conn) {
         try {
             
@@ -135,6 +137,7 @@ class Playlist
             return false;
         }
     }
+    // Fonction qui permet de supprimer une playlist
     public static function delete_playlist($id_playlist, $conn)
     {
         try
@@ -153,7 +156,47 @@ class Playlist
       }
 
     //fonction qui ajoute une musique à une playlist :
-    /*
+   
+    public static function add_music_playlist($id_playlist, $id_music, $conn)
+    {
+        try
+        {
+            // Vérifier si la combinaison id_music/id_playlist existe déjà
+            $checkSql = 'SELECT COUNT(*) FROM possede WHERE id_playlist = :id_playlist AND id_music = :id_music';
+            $checkStmt = $conn->prepare($checkSql);
+            $checkStmt->bindParam(':id_playlist', $id_playlist);
+            $checkStmt->bindParam(':id_music', $id_music);
+            $checkStmt->execute();
+            $count = $checkStmt->fetchColumn();
+
+            if ($count > 0) {
+                // La combinaison id_music/id_playlist existe déjà, renvoyer une erreur ou un message approprié
+                return false;
+            }
+
+            // Effectuer l'insertion
+            $sql = 'INSERT INTO possede (id_playlist, id_music) VALUES (:id_playlist, :id_music)';
+            $statement = $conn->prepare($sql);
+            $statement->bindParam(':id_playlist', $id_playlist);
+            $statement->bindParam(':id_music', $id_music);
+            $statement->execute();
+
+            // Mettre à jour la date de modification de la playlist
+            $updateSql = "UPDATE playlist SET date_modif = CURRENT_DATE WHERE id_playlist = :id_playlist";
+            $updateStmt = $conn->prepare($updateSql);
+            $updateStmt->bindParam(':id_playlist', $id_playlist);
+            $updateStmt->execute();
+
+            return true;
+        }
+        catch (PDOException $exception)
+        {
+            error_log('Request error: '.$exception->getMessage());
+            return false;
+        }
+    }
+
+     /*
     public static function add_music_playlist($id_playlist, $id_music, $conn) //fonction à vérifier
     {
         try
@@ -194,45 +237,8 @@ class Playlist
             return false;
         }
     }*/
-    public static function add_music_playlist($id_playlist, $id_music, $conn)
-    {
-        try
-        {
-            // Vérifier si la combinaison id_music/id_playlist existe déjà
-            $checkSql = 'SELECT COUNT(*) FROM possede WHERE id_playlist = :id_playlist AND id_music = :id_music';
-            $checkStmt = $conn->prepare($checkSql);
-            $checkStmt->bindParam(':id_playlist', $id_playlist);
-            $checkStmt->bindParam(':id_music', $id_music);
-            $checkStmt->execute();
-            $count = $checkStmt->fetchColumn();
 
-            if ($count > 0) {
-                // La combinaison id_music/id_playlist existe déjà, renvoyer une erreur ou un message approprié
-                return false;
-            }
 
-            // Effectuer l'insertion
-            $sql = 'INSERT INTO possede (id_playlist, id_music) VALUES (:id_playlist, :id_music)';
-            $statement = $conn->prepare($sql);
-            $statement->bindParam(':id_playlist', $id_playlist);
-            $statement->bindParam(':id_music', $id_music);
-            $statement->execute();
-
-            // Mettre à jour la date de modification de la playlist
-            $updateSql = "UPDATE playlist SET date_modif = CURRENT_DATE WHERE id_playlist = :id_playlist";
-            $updateStmt = $conn->prepare($updateSql);
-            $updateStmt->bindParam(':id_playlist', $id_playlist);
-            $updateStmt->execute();
-
-            return true;
-        }
-        catch (PDOException $exception)
-        {
-            ############################################################################################################
-            return true; ######GROS PROBLEME ICI mais ça marche#########################################################
-            ############################################################################################################
-        }
-    }
     //fonction qui supprime une musique d'une playlist :
     public static function delete_music_playlist($id_playlist, $id_music, $conn) //fonction à vérifier
         {
@@ -257,19 +263,15 @@ class Playlist
                 return false;
                 }
             }       
-            //fonction qui récupère les musiques d'une playlist :
+    //fonction qui récupère les musiques d'une playlist à partir de son id
     public static function get_music_playlist($id_playlist, $conn) //fonction à vérifier
         {
             try
             {   
-                //$sqlMusic = 'SELECT m.id_music, lien_music, title_music, time_music FROM music m JOIN possede pm on m.id_music=pm.id_music JOIN playlist pl ON pm.id_playlist=pl.id_playlist WHERE pl.id_playlist = :id_playlist';
-                //$sqlMusic= 'SELECT m.id_music, lien_music, title_music, time_music FROM music m JOIN playlist_music pm on m.id_music=pm.id_music JOIN playlist pl ON pm.id_playlist=pl.id_playlist WHERE pl.id_playlist = :id_playlist';
-                //$sqlMusic= 'SELECT m.id_music, lien_music, title_music, time_music FROM music m JOIN possede p on m.id_music=p.id_music JOIN playlist pl ON p.id_music=pl.id_music WHERE pl.id_playlist = :id_playlist';
-                //$sqlArtist= 'SELECT a.id_artist, nom_artist FROM artist a JOIN compose c ON a.id_artist=c.id_artist JOIN music m ON c.id_music=m.id_music WHERE m.id_music = :id_music';
+                
                 $sqlArtist='SELECT a.id_artist,pseudo_artist FROM artist a JOIN compose_music cm on a.id_artist = cm.id_artist WHERE cm.id_music = :id_music';
                 $sqlMusic = 'SELECT m.id_music, lien_music, title_music, time_music FROM music m JOIN possede p on m.id_music=p.id_music JOIN playlist pl ON p.id_playlist=pl.id_playlist WHERE pl.id_playlist = :id_playlist';
-                //$sqlArtist = 'SELECT a.id_artist,pseudo_artist FROM artist a JOIN compose_music cm on a.id_artist = cm.id_artist JOIN music m on cm.id_artist=m.id_artist JOIN possede p on m.id_artist=p.id_artist JOIN playlist pa on p.id_artist=pa.id_artist WHERE pa.id_playlist = :id_playlist';
-                //$sqlPlaylist = 'SELECT * FROM playlist WHERE id_playlist=:id_playlist';
+                
                 $sqlPlaylist = 'SELECT id_playlist, nom_playlist, date_creation, date_modif from playlist where id_playlist=:id_playlist';
                 $stmt = $conn->prepare($sqlPlaylist);
                 $stmt->bindParam(':id_playlist', $id_playlist);
@@ -314,7 +316,7 @@ class Playlist
             
             
 
-    //Récupère les playlists d'un user
+    //Récupère les playlists d'un utilisateur à partir de son id
     public static function playlist_user($id_user, $conn) { //fonction à vérifier
         try {
             $sql = 'SELECT id_playlist, nom_playlist, date_modif FROM Playlist WHERE id_user = :id_user';

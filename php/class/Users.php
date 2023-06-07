@@ -51,7 +51,7 @@ class Users
         }
         return $result['id_user'];
     }
-    // Récupère le mail de l'utilisateur à partir de son identifiant
+    // Récupère le mail de l'utilisateur à partir de son id
     public static function mail_usr($id_user, $conn) {
         try {
             
@@ -130,6 +130,7 @@ class Users
         }
         return $result['mdp_user'];
     }
+    // Fonction qui permet de se connecter 
     public static function login_usr($mail_user, $mdp_user, $conn) {
         try {
             $mail_exist= 'SELECT COUNT(*) FROM users WHERE mail_user = :mail_user';
@@ -204,7 +205,7 @@ class Users
         }
         return $result['photo_user'];
     }
-
+    //Fonction qui permet de se créer un compte 
     public static function ajout_usr($mail_user, $nom_user, $prenom_user, $date_naissance, $mdp_user, $pseudo_user, $photo_user, $conn) {
         try {
             
@@ -248,7 +249,7 @@ class Users
         }
     return true;
     }
-
+    //Fonction qui permet de modifier les informations de son compte
     public static function modifier_usr($id_user, $mail_user, $nom_user, $prenom_user, $date_naissance, $mdp_user, $pseudo_user, $conn) {
         try {
             
@@ -285,7 +286,7 @@ class Users
             return false;
         }
     }
-
+    //Fonction qui permet de modifier les informations de son compte sans modifier le mot de passe
     public static function modifier_usr_sans_mdp($id_user, $mail_user, $nom_user, $prenom_user, $date_naissance, $pseudo_user, $conn) {
         try {
             
@@ -319,7 +320,7 @@ class Users
             return false;
         }
     }
-
+    //Fonction qui permet de supprimer un utilisateur
     public static function delete_usr($id_user, $conn)
     {
         try
@@ -358,7 +359,7 @@ class Users
             return $id_playlist;
       
       }*/
-
+    //Fonction qui permet de savoir quelles albums un utilisateur à aimé afin de pouvoir l'ajouter à sa bibliothèque
     public static function usr_aime_album($id_user, $id_album, $conn) {
         try {
             $sql = 'INSERT INTO aime_album (id_album, id_user) VALUES (:id_album, :id_user)';
@@ -374,6 +375,7 @@ class Users
         }
     }
 
+    // Fonction qui permet de savoir si un utilisateur a déjà aimé un album
         public static function usr_aime_album_verif($id_user, $id_album, $conn) {
         try {
             $sql= 'SELECT COUNT(*) FROM aime_album WHERE id_user = :id_user AND id_album = :id_album';
@@ -393,7 +395,7 @@ class Users
             return false;
         }
     }
-
+    //Fonction qui permet d'enlever un album de la liste des albums aimés par un utilisateur
     public static function usr_aime_album_delete($id_user, $id_album, $conn) {
         try {
             $sql = 'DELETE FROM aime_album WHERE id_album = :id_album AND id_user = :id_user';

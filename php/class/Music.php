@@ -127,6 +127,7 @@ class Music
         }
         return $result;
     }
+    //fonction qui permet de rechercher une musique à partir de son genre
     public static function rechercherMusiqueGenre($conn, $recherche) {
         try {
             $sql = 'SELECT * FROM music WHERE id_music IN (SELECT id_music FROM music_appartient_genre WHERE genre_music_val LIKE :recherche)';
@@ -140,6 +141,8 @@ class Music
         }
         return $result;
     }
+
+    //fonction qui permet de rechercher une musique à partir de son artiste
     public static function rechercherMusiqueArtiste($conn, $recherche) {
         try {
             $sql = 'SELECT * FROM music WHERE id_music IN (SELECT id_music FROM music_appartient_artiste WHERE id_artiste IN (SELECT id_artiste FROM artiste WHERE nom_artiste LIKE :recherche))';
@@ -154,7 +157,7 @@ class Music
         return $result;
     }
 
-    //vérifie si une musique est dans les favoris d'un user spécifique
+    //vérifie si une musique est dans les favoris d'un utilisateur spécifique
     public static function verif_music_like($id_music, $id_user, $conn){
         try {
             $sql = "SELECT COUNT(*) FROM possede p
