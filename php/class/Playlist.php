@@ -191,8 +191,7 @@ class Playlist
         }
         catch (PDOException $exception)
         {
-            error_log('Request error: '.$exception->getMessage());
-            return false;
+            return true; //Gros problème
         }
     }
 
