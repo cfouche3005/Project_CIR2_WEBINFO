@@ -23,12 +23,12 @@
         <div id="container">
             <div class="d-flex flex-column">
                 <div class="d-flex justify-content-between">
-                    <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava1-bg.webp" alt="Avatar" class="image_profil justify-content-center"/>
+                    <img id="artistcover" src="" alt="Cover" class="image_profil justify-content-center"/>
                     <div class="d-flex flex-column w-50 me-auto align-self-center p-2">
-                        <p>Nom Artiste</p>
-                        <p>type</p>
-                        <p>info</p>
-                        <p>lien</p>
+                        <p id="artistname"><span>Nom : </span><span style="font-size: larger;">TETS</span></p>
+                        <p id="artisttype"><span>Type : </span><span style="font-size: larger;">TETS</span></p>
+                        <p id="artistinfo"><span>Info : </span><span style="font-size: larger;">TETS</span></p>
+                        <p id="artistlink"><span>Lien biographie : </span><span style="font-size: larger;">TETS</span></p>
                     </div>
                     <div class="d-flex flex-column align-self-center w-50 m-4">
                         <button class="button_top" type="submit" id='titre'>Titre d'un morceau</button>
@@ -42,15 +42,18 @@
                     </div>
                 </div>
                 <p class="separator p-2 m-4 w-100 justify-content-center">Discographie de l'artiste :</p>
-                <div class="d-flex overflow-x-auto w-100">
-                    <div class="card m-4" style="min-width: 200px; max-width: 200px; background-color: #454545!important; color: white!important;">
-                        <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava1-bg.webp" class="card-img-top img-fluid img-thumbnail align-self-center" style="width: 95%; margin-top: 3%" alt="...">
-                        <div class="card-body align-self-center">
-                            <button class="card-title card-button h6">Titre Album</button>
-                            <p class="card-text small">info dkdkdd dkdkdkd ddd ffffff d dd d f f ff sf sf f fs fs fsfs fs fsfs fsfs </p>
-                        </div>
-                    </div>
+                <br>
+                <div id="tracklist" class="d-flex flex-column overflow-auto" style="min-height: 290px; max-height: 290px;">
                 </div>
+                <!--<div class="d-flex overflow-x-auto w-100">
+                        <div class="card m-4" style="min-width: 200px; max-width: 200px; background-color: #454545!important; color: white!important;">
+                            <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava1-bg.webp" class="card-img-top img-fluid img-thumbnail align-self-center" style="width: 95%; margin-top: 3%" alt="...">
+                            <div class="card-body align-self-center">
+                                <button class="card-title card-button h6">Titre Album</button>
+                                <p class="card-text small">info dkdkdd dkdkdkd ddd ffffff d dd d f f ff sf sf f fs fs fsfs fs fsfs fsfs </p>
+                            </div>
+                        </div>
+                    </div>-->
             </div>
         </div>
     </body>
