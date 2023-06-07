@@ -83,8 +83,8 @@ $requestRessource = array_shift($request);
 //print_r(json_encode($test));
 //echo tt;
 
-//$method = $_SERVER['REQUEST_METHOD'];
-//$path = $_SERVER['PATH_INFO'];
+$method = $_SERVER['REQUEST_METHOD'];
+$path = $_SERVER['PATH_INFO'];
 /*
 $test=Album::info_album('2ecdc503-8f4e-488c-aee2-d35d87916021', $db);
 echo json_encode($test);
