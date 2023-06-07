@@ -4,8 +4,7 @@ import { baseurl } from "../../../js/store.js";
 let samepass = false;
 
 $("#login").click((e)=>{
-    const pagechange = new CustomEvent('pagechange', {detail: {href: '#/auth/login'}});
-    window.parent.document.dispatchEvent(pagechange);
+    window.parent.location.hash = '#/auth/login';
 });
 
 $("#pass-verif").on('input',(e)=>{
@@ -45,8 +44,7 @@ $("#registerform").on('submit',(e)=>{
                     toastBootstrap.hide();
                     $('#liveToast').removeClass("bg-success");
                     $('#toastmsd').text("");
-                    const pagechange = new CustomEvent('pagechange', {detail: {href: '#/auth/login'}});
-                    window.parent.document.dispatchEvent(pagechange);
+                    window.parent.location.hash = '#/auth/login';
                 },3000);
             }
         }, data);

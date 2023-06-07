@@ -75,8 +75,8 @@ if(loginstatus){
 
     $('#logout').click((e)=>{
         window.sessionStorage.clear();
-        const pagechange = new CustomEvent('pagechange', {detail: {href: '#/auth/login'}});
-        window.parent.document.dispatchEvent(pagechange);
+        window.parent.document.querySelector("audio").src = "";
+        window.parent.location.hash = '#/auth/login';
     });
 
 }

@@ -9,8 +9,7 @@ window.onload = (event) => {
 
 
 $("#inscrire").click((e)=>{
-    const pagechange = new CustomEvent('pagechange', {detail: {href: '#/auth/register'}});
-    window.parent.document.dispatchEvent(pagechange);
+    window.parent.location.hash = '#/auth/register';
 });
 
 $("#loginform").on('submit',(e)=>{

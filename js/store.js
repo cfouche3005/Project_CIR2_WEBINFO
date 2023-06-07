@@ -67,15 +67,16 @@ class ComponentStore {
     $(`#`+trackid+`_trackplay`).click((e) => {
       e.preventDefault();
       console.log("Play clicked : "+trackid);
-      const playmusic = new CustomEvent('playmusic', {detail: {track: trackojb}});
-      window.parent.document.dispatchEvent(playmusic);
+      window.sessionStorage.removeItem('playmusic');
+      window.sessionStorage.setItem("playmusic",JSON.stringify(trackojb));
+      window.parent.document.dispatchEvent(new CustomEvent('playmusic', {detail: {track: trackojb}}));
     });
 
     $(`#`+trackid+`_tracklike`).click((e) => {
-      e.preventDefault();
       console.log("Play clicked : "+trackid);
-      const playmusic = new CustomEvent('playmusic', {detail: {track: trackojb}});
-      window.parent.document.dispatchEvent(playmusic);
+      window.sessionStorage.removeItem('playmusic');
+      window.sessionStorage.setItem("playmusic",JSON.stringify(trackojb));
+      window.parent.document.dispatchEvent(new CustomEvent('playmusic', {detail: {track: trackojb}}));
     });
 
     trackartists.forEach((artist) => {
@@ -123,7 +124,10 @@ class ComponentStore {
       $(div_albumplay).click((e) => {
         e.preventDefault();
         console.log("Play clicked : "+albumdata.album[0].id_album);
+
         const playalbum = new CustomEvent('playalbum', {detail: {album: albumdata}});
+        window.sessionStorage.removeItem('albumlist');
+        window.sessionStorage.setItem("albumlist",JSON.stringify(albumdata));
         window.parent.document.dispatchEvent(playalbum);
       });
 
